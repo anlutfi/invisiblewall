@@ -5,7 +5,7 @@ cv::Mat makeFrame(cv::Mat control, cv::Mat interaction, cv::Mat fill, int thresh
     cv::Mat diff; 
     cv::absdiff(control, interaction, diff);
     
-    cv::Mat result = Mat::zeros(control.rows, control.cols, CV_8UC3);
+    cv::Mat result = cv::Mat::zeros(control.rows, control.cols, fill.type());
     
     for(int i = 0; i < diff.rows; i++)
     {
@@ -13,7 +13,7 @@ cv::Mat makeFrame(cv::Mat control, cv::Mat interaction, cv::Mat fill, int thresh
         {
             if(diff.at<uchar>(i, j) >= threshold)
             {
-               result.at<Vec3b>(i, j) = fill.at<Vec3b>(i, j);
+               result.at<cv::Vec3b>(i, j) = fill.at<cv::Vec3b>(i, j);
             }
         }
     }
