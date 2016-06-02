@@ -5,9 +5,12 @@
 #include <iostream>
 #include <time.h>
 
+#include "MakeFrame.h"
+
 using namespace cv;
 using namespace std;
 
+/*
 cv::Mat makeFrame(cv::Mat control, cv::Mat interaction, cv::Mat fill, int threshold)
 {
     cv::Mat diff; 
@@ -27,7 +30,8 @@ cv::Mat makeFrame(cv::Mat control, cv::Mat interaction, cv::Mat fill, int thresh
     }
     
     return result;
-} 
+}
+//*/ 
 
 cv::Mat extractDiff(cv::Mat img1, cv::Mat img2, int threshold)
 {

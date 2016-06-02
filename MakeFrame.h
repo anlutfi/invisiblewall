@@ -14,12 +14,10 @@ control is a gray-scale control image, a picture of the empty interaction space
 
 interaction is a gray-scale picture of the filled interaction space
 
-fill is a color picture to fill the silhoutes in the resulting image, tipically, the other side of the projection wall
+fill is a picture to fill the silhoutes in the resulting image, tipically, the other side of the projection wall.
 
-threshold is a number between 0 and 255. Corresponding pixels in control and interaction will be used as masks if the absolute difference between them is larger or equal to threshold.
-
-filltype is 
+threshold is a number between 0 and 255. Corresponding pixels in control and interaction will be used as masks if the absolute difference between them is larger or equal to threshold. 
 */
-cv::Mat makeFrame(cv::Mat control, cv::Mat interaction, cv::Mat fill, const int filltype, int threshold);
+cv::Mat makeFrame(cv::Mat control, cv::Mat interaction, cv::Mat fill, int threshold);
 
 #endif
