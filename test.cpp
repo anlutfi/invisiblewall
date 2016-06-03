@@ -1,7 +1,9 @@
-//gcc -I/usr/local/include/opencv -I/usr/local/include/opencv2 -L/usr/local/lib/ -g -o tst test.c -lopencv_core -lopencv_imgproc -lopencv_highgui
+//g++ -I/usr/local/include/opencv -I/usr/local/include/opencv2 -L/usr/local/lib/ -g -o tst MakeFrame.h MakeFrame.cpp test.cpp -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_imgcodecs -lopencv_videoio
 
 #include <opencv/cv.h>
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/videoio.hpp>
+#include <opencv2/opencv.hpp>
 #include <iostream>
 #include <time.h>
 
@@ -10,21 +12,22 @@
 using namespace cv;
 using namespace std;
 
-int main(int argc, char** argv)
+void testFrame(char* imgnm, char* ctrnm, char* imgcolornm, char* thresholdstr, char* countstr)
 {
-    cv::Mat img = imread(argv[1], CV_LOAD_IMAGE_GRAYSCALE);
-    cv::Mat ctr = imread(argv[2], CV_LOAD_IMAGE_GRAYSCALE);
-    cv::Mat imgcolor = imread(argv[3], CV_LOAD_IMAGE_COLOR);
+    cv::Mat img = imread(imgnm, CV_LOAD_IMAGE_GRAYSCALE);
+    cv::Mat ctr = imread(ctrnm, CV_LOAD_IMAGE_GRAYSCALE);
+    cv::Mat imgcolor = imread(imgcolornm, CV_LOAD_IMAGE_COLOR);
     
     int threshold;
-    sscanf(argv[4], "%d", &threshold);
+    sscanf(thresholdstr, "%d", &threshold);
     
     int count;
-    sscanf(argv[5], "%d", &count);
+    sscanf(countstr, "%d", &count);
     
     
     cv::Mat mask;
     cv::Mat result;
+    
     clock_t t0 = clock();
     
     for(int i = 0; i < count; i++)
@@ -35,18 +38,128 @@ int main(int argc, char** argv)
     cout << "time= " << (double)(clock() - t0) / CLOCKS_PER_SEC << "\n";
     
     
-    
-    
-    
-    
-    
     //*
     namedWindow( "Display window", CV_WINDOW_AUTOSIZE );
     imshow( "Display window", result );
     //*/
 
-    waitKey(0);                                          
+    waitKey(0); 
+}
+
+int testCamera()
+{
+    VideoCapture cap(0); // open the default camera
+    if(!cap.isOpened())  // check if we succeeded
+        return -1;
+    namedWindow("Video", 1);
+    for(;;)
+    {
+        Mat frame;
+        cap >> frame; // get a new frame from camera
+        imshow("Video", frame);
+        if(waitKey(27) >= 0) break;
+    }
+    return 0;
+}
+
+int makeControl()
+{
+    VideoCapture cap(0); // open the default camera
+    if(!cap.isOpened())  // check if we succeeded
+        return -1;
     
+    Mat frame;
+    cap >> frame; // get a new frame from camera
+    
+    imwrite("./testimages/control.jpg", frame);
+    
+    return 0;
+}
+
+int testLiveMask(char* nm, char* thresholdstr)
+{
+    Mat fill = imread(nm, CV_LOAD_IMAGE_COLOR);
+    Mat ctr = imread(nm, CV_LOAD_IMAGE_GRAYSCALE);
+    
+    int threshold;
+    sscanf(thresholdstr, "%d", &threshold);
+    
+    VideoCapture cap(0); // open the default camera
+    if(!cap.isOpened())  // check if we succeeded
+        return -1;
+    namedWindow("Video", 1);
+    for(;;)
+    {
+        Mat frame;
+        cap >> frame; // get a new frame from camera
+        cvtColor(frame, frame, 6);
+        Mat output = makeFrame(ctr, frame, fill, threshold);
+        imshow("Video", output);
+        if(waitKey(27) >= 0) break;
+    }
+    return 0;
+}
+
+int testVideoWrite(char* nm, char* outputnm, char* thresholdstr)
+{
+    Mat fill = imread(nm, CV_LOAD_IMAGE_COLOR);
+    Mat ctr = imread(nm, CV_LOAD_IMAGE_GRAYSCALE);
+    
+    int threshold;
+    sscanf(thresholdstr, "%d", &threshold);
+    
+    VideoCapture cap(0); // open the default camera
+    if(!cap.isOpened())  // check if we succeeded
+        return -1;
+    namedWindow("Video", 1);
+    
+    double w = cap.get(CV_CAP_PROP_FRAME_WIDTH); //get the width of frames of the video
+    double h = cap.get(CV_CAP_PROP_FRAME_HEIGHT); //get the height of frames of the video
+    
+    Size frameSize(static_cast<int>(w), static_cast<int>(h));
+    
+    VideoWriter output (outputnm, CV_FOURCC('H','2','6','4'), 20, frameSize, true);
+    
+    if ( !output.isOpened() ) //if not initialize the VideoWriter successfully, exit the program
+    {
+        cout << "ERROR: Failed to write the video" << endl;
+        return -1;
+    }
+    
+    for(;;)
+    {
+        Mat frame;
+        cap >> frame; // get a new frame from camera
+        cvtColor(frame, frame, 6);
+        Mat vframe = makeFrame(ctr, frame, fill, threshold);
+        imshow("Video", vframe);
+        output.write(vframe);
+        if(waitKey(27) >= 0) break;
+    }
+    return 0;
+}
+
+int main(int argc, char** argv)
+{
+    /*
+    testFrame(argv[1], argv[2], argv[3], argv[4], argv[5]);                                    
+    //*/
+    
+    /*
+    testCamera();
+    //*/
+    
+    /*
+    makeControl();
+    //*/
+    
+    /*
+    testLiveMask(argv[1], argv[2]);
+    //*/
+    
+    //*
+    testVideoWrite(argv[1], argv[2], argv[3]);
+    //*/
     return 0;
 }
 
