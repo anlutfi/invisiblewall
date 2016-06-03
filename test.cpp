@@ -7,7 +7,7 @@
 #include <iostream>
 #include <time.h>
 
-#include "MakeFrame.h"
+#include "LiveMask.h"
 
 using namespace cv;
 using namespace std;
@@ -51,7 +51,7 @@ int testCamera()
     VideoCapture cap(0); // open the default camera
     if(!cap.isOpened())  // check if we succeeded
         return -1;
-    namedWindow("Video", 1);
+    namedWindow("Video", CV_WINDOW_AUTOSIZE);
     for(;;)
     {
         Mat frame;
@@ -87,15 +87,15 @@ int testLiveMask(char* nm, char* thresholdstr)
     VideoCapture cap(0); // open the default camera
     if(!cap.isOpened())  // check if we succeeded
         return -1;
-    namedWindow("Video", 1);
-    for(;;)
+    namedWindow("Video", CV_WINDOW_NORMAL);
+    for(int i = -1; i < 0; i = waitKey(27))
     {
         Mat frame;
         cap >> frame; // get a new frame from camera
-        cvtColor(frame, frame, 6);
+        cvtColor(frame, frame, CV_BGR2GRAY);
         Mat output = makeFrame(ctr, frame, fill, threshold);
         imshow("Video", output);
-        if(waitKey(27) >= 0) break;
+        //if(waitKey(27) >= 0) break;
     }
     return 0;
 }
@@ -130,13 +130,26 @@ int testVideoWrite(char* nm, char* outputnm, char* thresholdstr)
     {
         Mat frame;
         cap >> frame; // get a new frame from camera
-        cvtColor(frame, frame, 6);
+        cvtColor(frame, frame, CV_BGR2GRAY);
         Mat vframe = makeFrame(ctr, frame, fill, threshold);
         imshow("Video", vframe);
         output.write(vframe);
         if(waitKey(27) >= 0) break;
     }
     return 0;
+}
+
+
+void altTestMask(char* nm, char* thresholdstr)
+{
+    Mat ctr = imread(nm, CV_LOAD_IMAGE_GRAYSCALE);
+    
+    int threshold;
+    sscanf(thresholdstr, "%d", &threshold);
+    
+    VideoCapture interaction(0); // open the default camera
+    
+    liveMask(ctr, interaction, interaction, threshold);
 }
 
 int main(int argc, char** argv)
@@ -157,8 +170,12 @@ int main(int argc, char** argv)
     testLiveMask(argv[1], argv[2]);
     //*/
     
-    //*
+    /*
     testVideoWrite(argv[1], argv[2], argv[3]);
+    //*/
+    
+    //*
+    altTestMask(argv[1], argv[2]);
     //*/
     return 0;
 }
