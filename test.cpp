@@ -88,12 +88,38 @@ int testLiveMask(char* nm, char* thresholdstr)
     if(!cap.isOpened())  // check if we succeeded
         return -1;
     namedWindow("Video", CV_WINDOW_NORMAL);
+    cvSetWindowProperty("Video", CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
     for(int i = -1; i < 0; i = waitKey(27))
     {
         Mat frame;
         cap >> frame; // get a new frame from camera
         cvtColor(frame, frame, CV_BGR2GRAY);
         Mat output = makeFrame(ctr, frame, fill, threshold);
+        imshow("Video", output);
+        //if(waitKey(27) >= 0) break;
+    }
+    return 0;
+}
+
+int testLiveMaskColor(char* nm, char* fillnm, char* thresholdstr)
+{
+    Mat fill = imread(fillnm, CV_LOAD_IMAGE_COLOR);
+    Mat ctr = imread(nm, CV_LOAD_IMAGE_COLOR);
+    
+    int threshold;
+    sscanf(thresholdstr, "%d", &threshold);
+    
+    VideoCapture cap(0); // open the default camera
+    if(!cap.isOpened())  // check if we succeeded
+        return -1;
+    namedWindow("Video", CV_WINDOW_NORMAL);
+    cvSetWindowProperty("Video", CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
+    for(int i = -1; i != 27; i = waitKey(10) % 256)
+    {
+        Mat frame;
+        cap >> frame; // get a new frame from camera
+        //cvtColor(frame, frame, CV_BGR2GRAY);
+        Mat output = makeFrameColor(ctr, frame, fill, threshold);
         imshow("Video", output);
         //if(waitKey(27) >= 0) break;
     }
@@ -170,11 +196,15 @@ int main(int argc, char** argv)
     testLiveMask(argv[1], argv[2]);
     //*/
     
+    //*
+    testLiveMaskColor(argv[1], argv[2], argv[3]);
+    //*/
+    
     /*
     testVideoWrite(argv[1], argv[2], argv[3]);
     //*/
     
-    //*
+    /*
     altTestMask(argv[1], argv[2]);
     //*/
     return 0;

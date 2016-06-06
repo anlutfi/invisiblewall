@@ -8,6 +8,7 @@ int liveMask(cv::Mat control, cv::VideoCapture interaction, cv::VideoCapture fil
         return -1;
     
     cv::namedWindow("Video", CV_WINDOW_NORMAL);
+    cvSetWindowProperty("Video", CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
     for(int i = -1; i < 0; i = waitKey(27))
     {
         Mat interactionframe;
