@@ -9,14 +9,31 @@ int liveMask(cv::Mat control, cv::VideoCapture interaction, cv::VideoCapture fil
     
     cv::namedWindow("Video", CV_WINDOW_NORMAL);
     cvSetWindowProperty("Video", CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
-    for(int i = -1; i < 0; i = waitKey(27))
+    
+    Mat interactionframe;
+        
+    int blurkernelsize;
+    
+    for(int key = -1; key != 27; key = waitKey(10) % 256)
     {
-        Mat interactionframe;
         interaction >> interactionframe; // get a new frame from camera
-        cvtColor(interactionframe, interactionframe, CV_BGR2GRAY);
         fill >> fillframe;
-        Mat output = makeFrame(control, interactionframe, fillframe, threshold);
+        Mat output = makeFrameColor(control, interactionframe, fillframe, threshold, blurkernelsize);
         imshow("Video", output);
+        
+        //TODO REVIEW MAX AND MIN SIZES!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1111111111111111111111111111
+        if( (char)key == '+' )
+            threshold += 1;
+        else if( (char)key == '-' )
+            threshold -= 1;
+        else if( (char)key == 'p' )
+            blurkernelsize += 2;
+        else if( (char)key == 'o' )
+            blurkernelsize = max(blurkernelsize - 2, 1);
+        else if( (char)key == 'c' )
+        {
+            control = interactionframe;
+        }
     }
     return 0;
 }

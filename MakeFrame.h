@@ -3,6 +3,9 @@
 
 #include <opencv/cv.h>
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/core/utility.hpp>
 #include <iostream>
 #include <time.h>
 
@@ -19,6 +22,6 @@ fill is a picture to fill the silhoutes in the resulting image, tipically, the o
 threshold is a number between 0 and 255. Corresponding pixels in control and interaction will be used as masks if the absolute difference between them is larger or equal to threshold. 
 */
 cv::Mat makeFrame(cv::Mat control, cv::Mat interaction, cv::Mat fill, int threshold);
-cv::Mat makeFrameColor(cv::Mat control, cv::Mat interaction, cv::Mat fill, int threshold);
+cv::Mat makeFrameColor(cv::Mat control, cv::Mat interaction, cv::Mat fill, int threshold, int blurkernelsize);
 
 #endif
