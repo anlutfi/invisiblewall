@@ -22,14 +22,26 @@ int liveMask(cv::Mat control, cv::VideoCapture interaction, cv::VideoCapture fil
         imshow("Video", output);
         
         //TODO REVIEW MAX AND MIN SIZES!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1111111111111111111111111111
-        if( (char)key == '+' )
+        if( (char)key == '=' )
+        {
             threshold += 1;
+            std::cout << "Threshold = " << threshold << "\n";
+        }
         else if( (char)key == '-' )
+        {
             threshold -= 1;
+            std::cout << "Threshold = " << threshold << "\n";
+        }
         else if( (char)key == 'p' )
+        {
             blurkernelsize += 2;
+            std::cout << "Kernel size = " << blurkernelsize << "\n";
+        }
         else if( (char)key == 'o' )
+        {
             blurkernelsize = max(blurkernelsize - 2, 1);
+            std::cout << "Kernel size = " << blurkernelsize << "\n";
+        }
         else if( (char)key == 'c' )
         {
             control = interactionframe;

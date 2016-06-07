@@ -125,17 +125,29 @@ int testLiveMaskColor(char* nm, char* fillnm, char* thresholdstr)
         imshow("Video", output);
         //if(waitKey(27) >= 0) break;
         
-        if( (char)key == '+' )
+        if( (char)key == '=' )
+        {
             threshold += 1;
+            std::cout << "Threshold = " << threshold << "\n";
+        }
         else if( (char)key == '-' )
+        {
             threshold -= 1;
+            std::cout << "Threshold = " << threshold << "\n";
+        }
         else if( (char)key == 'p' )
+        {
             blurkernelsize += 2;
+            std::cout << "Kernel size = " << blurkernelsize << "\n";
+        }
         else if( (char)key == 'o' )
+        {
             blurkernelsize = max(blurkernelsize - 2, 1);
+            std::cout << "Kernel size = " << blurkernelsize << "\n";
+        }
         else if( (char)key == 'c' )
         {
-            cap >> ctr;
+            ctr = frame;
         }
     }
     return 0;
