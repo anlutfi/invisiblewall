@@ -12,7 +12,7 @@ int liveMask(cv::Mat control, cv::VideoCapture interaction, cv::VideoCapture fil
     
     Mat interactionframe;
         
-    int blurkernelsize;
+    int blurkernelsize = 1;
     
     for(int key = -1; key != 27; key = waitKey(10) % 256)
     {

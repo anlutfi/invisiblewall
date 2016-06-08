@@ -1,4 +1,4 @@
-//g++ -I/usr/local/include/opencv -I/usr/local/include/opencv2 -L/usr/local/lib/ -g -o tst MakeFrame.h MakeFrame.cpp test.cpp -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_imgcodecs -lopencv_videoio
+//g++ -I/usr/local/include/opencv -I/usr/local/include/opencv2 -L/usr/local/lib/ -g -o tst MakeFrame.h MakeFrame.cpp LiveMask.h LiveMask.cpp Calibration.h Calibration.cpp test.cpp -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_imgcodecs -lopencv_videoio
 
 #include <opencv/cv.h>
 #include <opencv2/highgui/highgui.hpp>
@@ -8,6 +8,7 @@
 #include <time.h>
 
 #include "LiveMask.h"
+#include "Calibration.h"
 
 using namespace cv;
 using namespace std;
@@ -201,8 +202,22 @@ void altTestMask(char* nm, char* thresholdstr)
     sscanf(thresholdstr, "%d", &threshold);
     
     VideoCapture interaction(0); // open the default camera
+    VideoCapture fill(0);
     
-    liveMask(ctr, interaction, interaction, threshold);
+    liveMask(ctr, interaction, fill, threshold);
+}
+
+void testProcess(char* nm)
+{
+    VideoCapture interaction;
+    VideoCapture fill;
+    
+    assignCameras(&interaction, &fill);
+    
+    int threshold = 30;
+    
+    Mat ctr = imread(nm, CV_LOAD_IMAGE_COLOR);
+    liveMask(ctr, interaction, fill, threshold);
 }
 
 int main(int argc, char** argv)
@@ -223,7 +238,7 @@ int main(int argc, char** argv)
     testLiveMask(argv[1], argv[2]);
     //*/
     
-    //*
+    /*
     testLiveMaskColor(argv[1], argv[2], argv[3]);
     //*/
     
@@ -233,6 +248,10 @@ int main(int argc, char** argv)
     
     /*
     altTestMask(argv[1], argv[2]);
+    //*/
+    
+    //*
+    testProcess(argv[1]);
     //*/
     return 0;
 }
