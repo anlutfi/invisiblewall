@@ -1,5 +1,7 @@
 //g++ -I/usr/local/include/opencv -I/usr/local/include/opencv2 -L/usr/local/lib/ -g -o tst MakeFrame.h MakeFrame.cpp LiveMask.h LiveMask.cpp Calibration.h Calibration.cpp test.cpp -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_imgcodecs -lopencv_videoio
 
+//TODO make cam index a parameter
+
 #include <opencv/cv.h>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/videoio.hpp>
@@ -112,7 +114,7 @@ int testLiveMaskColor(char* nm, char* fillnm, char* thresholdstr)
     
     int blurkernelsize = 9;
     
-    VideoCapture cap(0); // open the default camera
+    VideoCapture cap(1); // open the default camera
     if(!cap.isOpened())  // check if we succeeded
         return -1;
     namedWindow("Video", CV_WINDOW_NORMAL);
@@ -220,6 +222,28 @@ void testProcess(char* nm)
     liveMask(ctr, interaction, fill, threshold);
 }
 
+void testMultiProcess(char* nm, char* idx1, char* idx2)
+{
+    VideoCapture interaction;
+    VideoCapture fill;
+    
+    int index1, index2;
+    
+    sscanf(idx1, "%d", &index1);
+    sscanf(idx2, "%d", &index2);
+    
+    
+    assignCameras(&interaction, &fill, index1, index2);
+    
+    VideoFeed interactionfeed(&interaction);
+    VideoFeed fillfeed(&fill);
+        
+    int threshold = 30;
+    
+    Mat ctr = imread(nm, CV_LOAD_IMAGE_COLOR);
+    liveMask(ctr, interactionfeed, fillfeed, threshold);
+}
+
 int main(int argc, char** argv)
 {
     /*
@@ -250,9 +274,15 @@ int main(int argc, char** argv)
     altTestMask(argv[1], argv[2]);
     //*/
     
-    //*
+    /*
     testProcess(argv[1]);
     //*/
+    
+    //*
+    testMultiProcess(argv[1], argv[2], argv[3]);
+    //*/
+    
+    
     return 0;
 }
 

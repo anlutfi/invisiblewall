@@ -49,3 +49,62 @@ int liveMask(cv::Mat control, cv::VideoCapture interaction, cv::VideoCapture fil
     }
     return 0;
 }
+
+
+int liveMask(cv::Mat control, VideoFeed interaction, VideoFeed fill, int threshold)
+{
+    Mat fillframe;
+    
+    cv::namedWindow("Video", CV_WINDOW_NORMAL);
+    cvSetWindowProperty("Video", CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
+    
+    /*
+    std::thread interactionthrd(&VideoFeed::run, &interaction);
+    std::thread fillthrd(&VideoFeed::run, &fill);
+    //*/
+    Mat interactionframe;
+        
+    int blurkernelsize = 1;
+    
+    for(int key = -1; key != 27; key = waitKey(10) % 256)
+    {
+        interactionframe = interaction.getFrame();
+        fillframe = fill.getFrame();
+        
+        Mat output = makeFrameColor(control, interactionframe, fillframe, threshold, blurkernelsize);
+        imshow("Video", output);
+        
+        //TODO REVIEW MAX AND MIN SIZES!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1111111111111111111111111111
+        if( (char)key == '=' )
+        {
+            threshold += 1;
+            std::cout << "Threshold = " << threshold << "\n";
+        }
+        else if( (char)key == '-' )
+        {
+            threshold -= 1;
+            std::cout << "Threshold = " << threshold << "\n";
+        }
+        else if( (char)key == 'p' )
+        {
+            blurkernelsize += 2;
+            std::cout << "Kernel size = " << blurkernelsize << "\n";
+        }
+        else if( (char)key == 'o' )
+        {
+            blurkernelsize = max(blurkernelsize - 2, 1);
+            std::cout << "Kernel size = " << blurkernelsize << "\n";
+        }
+        else if( (char)key == 'c' )
+        {
+            control = interactionframe;
+        }
+    }
+    
+    /*
+    interactionthrd.join();
+    fillthrd.join();
+    //*/
+    
+    return 0;
+}

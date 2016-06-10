@@ -15,6 +15,7 @@ using namespace cv;
 using namespace std;
 
 void assignCameras(cv::VideoCapture* interaction, cv::VideoCapture* fill);
+void assignCameras(cv::VideoCapture* interaction, cv::VideoCapture* fill, int i1, int i2);
 void calibrateResolution(cv::VideoCapture source);
 
 #endif
