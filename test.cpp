@@ -216,30 +216,38 @@ void altTestMask(char* nm, char* thresholdstr)
     liveMask(ctr, interaction, fill, threshold);
 }
 
-void testProcess(char* nm, char*outputnm)
+void testProcess(char* idx1, char* idx2, char* outputnm)
 {
     VideoCapture interaction;
     VideoCapture fill;
     
-    assignCameras(&interaction, &fill, 0, 1);
+    int i1, i2;
+    sscanf(idx1, "%d", &i1);
+    sscanf(idx2, "%d", &i2);
     
-    int threshold = 30;
+    assignCameras(&interaction, &fill, i1, i2);
     
-    double w = interaction.get(CV_CAP_PROP_FRAME_WIDTH); //get the width of frames of the video
-    double h = interaction.get(CV_CAP_PROP_FRAME_HEIGHT); //get the height of frames of the video
+    VideoWriter* output = NULL;
     
-    Size frameSize(static_cast<int>(w), static_cast<int>(h));
-    
-    VideoWriter output (outputnm, CV_FOURCC('H','2','6','4'), 20, frameSize, true);
-    
-    if ( !output.isOpened() ) //if not initialize the VideoWriter successfully, exit the program
+    if(outputnm != NULL)
     {
-        cout << "ERROR: Failed to write the video" << endl;
-        return;
+        double w = interaction.get(CV_CAP_PROP_FRAME_WIDTH); //get the width of frames of the video
+        double h = interaction.get(CV_CAP_PROP_FRAME_HEIGHT); //get the height of frames of the video
+        
+        Size frameSize(static_cast<int>(w), static_cast<int>(h));
+        
+        output = new VideoWriter (outputnm, CV_FOURCC('H','2','6','4'), 20, frameSize, true);
+        
+        if ( !output->isOpened() ) //if not initialize the VideoWriter successfully, exit the program
+        {
+            cout << "ERROR: Failed to write the video" << endl;
+            return;
+        }
     }
     
-    Mat ctr = imread(nm, CV_LOAD_IMAGE_COLOR);
-    liveMask(ctr, interaction, fill, threshold, &flipvert, &output);
+    Mat ctr;
+    interaction >> ctr;
+    liveMask(ctr, interaction, fill, 80, &flipvert, output);
 }
 
 void testMultiProcess(char* nm, char* idx1, char* idx2)
@@ -295,7 +303,7 @@ int main(int argc, char** argv)
     //*/
     
     //*
-    testProcess(argv[1], argv[2]);
+    testProcess(argv[1], argv[2], argc == 4? argv[3] : NULL);
     //*/
     
     /*
