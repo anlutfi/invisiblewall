@@ -21,8 +21,6 @@ void assignCameras(cv::VideoCapture* interaction, cv::VideoCapture* fill)
             continue;
         }
         
-        std::cout << "Is this the [I]nteraction camera, the [F]ill camera or [N]one? ";
-        
         char key;
         for(key = ' ';
             tolower(key) != 'i' && tolower(key) != 'f' && tolower(key) != 'n';
@@ -48,7 +46,6 @@ void assignCameras(cv::VideoCapture* interaction, cv::VideoCapture* fill)
             case 'n':
                 delete cap;
         }
-        cout << "eeeee";
         //*/
     }
     destroyWindow("Camera Test");
@@ -75,8 +72,6 @@ void assignCameras(cv::VideoCapture* interaction, cv::VideoCapture* fill, int i1
             continue;
         }
         
-        std::cout << "Is this the [I]nteraction camera, the [F]ill camera or [N]one? ";
-        
         char key;
         for(key = ' ';
             tolower(key) != 'i' && tolower(key) != 'f' && tolower(key) != 'n';
@@ -102,7 +97,6 @@ void assignCameras(cv::VideoCapture* interaction, cv::VideoCapture* fill, int i1
             case 'n':
                 delete cap;
         }
-        cout << "eeeee";
         //*/
     }
     destroyWindow("Camera Test");

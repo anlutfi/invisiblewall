@@ -15,6 +15,12 @@
 using namespace cv;
 using namespace std;
 
+void flipvert(cv::Mat img)
+{
+    //cv::Mat cpy = img->clone();
+    cv::flip(img, img, 1);
+}
+
 void testFrame(char* imgnm, char* ctrnm, char* imgcolornm, char* thresholdstr, char* countstr)
 {
     cv::Mat img = imread(imgnm, CV_LOAD_IMAGE_GRAYSCALE);
@@ -125,6 +131,7 @@ int testLiveMaskColor(char* nm, char* fillnm, char* thresholdstr)
         cap >> frame; // get a new frame from camera
         //cvtColor(frame, frame, CV_BGR2GRAY);
         Mat output = makeFrameColor(ctr, frame, fill, threshold, blurkernelsize);
+        //Mat output = makeFrameColor(ctr, frame, fill, threshold, blurkernelsize, &flipvert);
         imshow("Video", output);
         //if(waitKey(27) >= 0) break;
         
@@ -203,23 +210,36 @@ void altTestMask(char* nm, char* thresholdstr)
     int threshold;
     sscanf(thresholdstr, "%d", &threshold);
     
-    VideoCapture interaction(0); // open the default camera
-    VideoCapture fill(0);
+    VideoCapture interaction(1); // open the default camera
+    VideoCapture fill(1);
     
     liveMask(ctr, interaction, fill, threshold);
 }
 
-void testProcess(char* nm)
+void testProcess(char* nm, char*outputnm)
 {
     VideoCapture interaction;
     VideoCapture fill;
     
-    assignCameras(&interaction, &fill);
+    assignCameras(&interaction, &fill, 0, 1);
     
     int threshold = 30;
     
+    double w = interaction.get(CV_CAP_PROP_FRAME_WIDTH); //get the width of frames of the video
+    double h = interaction.get(CV_CAP_PROP_FRAME_HEIGHT); //get the height of frames of the video
+    
+    Size frameSize(static_cast<int>(w), static_cast<int>(h));
+    
+    VideoWriter output (outputnm, CV_FOURCC('H','2','6','4'), 20, frameSize, true);
+    
+    if ( !output.isOpened() ) //if not initialize the VideoWriter successfully, exit the program
+    {
+        cout << "ERROR: Failed to write the video" << endl;
+        return;
+    }
+    
     Mat ctr = imread(nm, CV_LOAD_IMAGE_COLOR);
-    liveMask(ctr, interaction, fill, threshold);
+    liveMask(ctr, interaction, fill, threshold, &flipvert, &output);
 }
 
 void testMultiProcess(char* nm, char* idx1, char* idx2)
@@ -274,11 +294,11 @@ int main(int argc, char** argv)
     altTestMask(argv[1], argv[2]);
     //*/
     
-    /*
-    testProcess(argv[1]);
+    //*
+    testProcess(argv[1], argv[2]);
     //*/
     
-    //*
+    /*
     testMultiProcess(argv[1], argv[2], argv[3]);
     //*/
     

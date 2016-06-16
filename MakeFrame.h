@@ -23,5 +23,12 @@ threshold is a number between 0 and 255. Corresponding pixels in control and int
 */
 cv::Mat makeFrame(cv::Mat control, cv::Mat interaction, cv::Mat fill, int threshold);
 cv::Mat makeFrameColor(cv::Mat control, cv::Mat interaction, cv::Mat fill, int threshold, int blurkernelsize);
+cv::Mat makeFrameColor( cv::Mat control,
+                        cv::Mat interaction,
+                        cv::Mat fill,
+                        int threshold,
+                        int blurkernelsize,
+                        void (*reorient)(cv::Mat)
+                      );
 
 #endif

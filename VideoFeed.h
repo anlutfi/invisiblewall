@@ -20,11 +20,13 @@ class VideoFeed
     std::mutex* mutexframe;
     Mat frame;
     VideoCapture capture;
+    void (*reorient)(Mat);
     
     void run();
     Mat getFrame();
     
     VideoFeed(VideoCapture* capture);
+    VideoFeed( VideoCapture* capture, void (*reorient)(Mat) );    
 };
 
 
