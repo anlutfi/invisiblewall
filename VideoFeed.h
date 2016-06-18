@@ -19,7 +19,7 @@ class VideoFeed
     public:
     std::mutex* mutexframe;
     Mat frame;
-    VideoCapture capture;
+    VideoCapture* capture;
     void (*reorient)(Mat);
     
     void run();

@@ -117,10 +117,13 @@ int liveMask(cv::Mat control, VideoFeed interaction, VideoFeed fill, int thresho
 {
     Mat fillframe;
     
+    std::cout << "\n\nfill: " << fill.capture->get(CAP_PROP_FRAME_WIDTH) << " " << fill.capture->get(CAP_PROP_FRAME_HEIGHT) << "\n";
+    std::cout << "interaction: " << interaction.capture->get(CAP_PROP_FRAME_WIDTH) << " " << interaction.capture->get(CAP_PROP_FRAME_HEIGHT) << "\n";
+    
     cv::namedWindow("Video", CV_WINDOW_NORMAL);
     cvSetWindowProperty("Video", CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
     
-    /*
+    //*
     std::thread interactionthrd(&VideoFeed::run, &interaction);
     std::thread fillthrd(&VideoFeed::run, &fill);
     //*/
@@ -163,7 +166,7 @@ int liveMask(cv::Mat control, VideoFeed interaction, VideoFeed fill, int thresho
         }
     }
     
-    /*
+    //*
     interactionthrd.join();
     fillthrd.join();
     //*/

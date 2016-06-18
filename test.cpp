@@ -250,7 +250,7 @@ void testProcess(char* idx1, char* idx2, char* outputnm)
     liveMask(ctr, interaction, fill, 80, &flipvert, output);
 }
 
-void testMultiProcess(char* nm, char* idx1, char* idx2)
+void testMultiProcess(char* idx1, char* idx2)
 {
     VideoCapture interaction;
     VideoCapture fill;
@@ -265,10 +265,14 @@ void testMultiProcess(char* nm, char* idx1, char* idx2)
     
     VideoFeed interactionfeed(&interaction);
     VideoFeed fillfeed(&fill);
-        
+    
+    cout << "fill: " << fill.get(CAP_PROP_FRAME_WIDTH) << " " << fill.get(CAP_PROP_FRAME_HEIGHT) << "\n";
+    cout << "interaction: " << interaction.get(CAP_PROP_FRAME_WIDTH) << " " << interaction.get(CAP_PROP_FRAME_HEIGHT) << "\n";
+            
     int threshold = 30;
     
-    Mat ctr = imread(nm, CV_LOAD_IMAGE_COLOR);
+    Mat ctr;
+    interaction >> ctr;
     liveMask(ctr, interactionfeed, fillfeed, threshold);
 }
 
@@ -302,12 +306,12 @@ int main(int argc, char** argv)
     altTestMask(argv[1], argv[2]);
     //*/
     
-    //*
+    /*
     testProcess(argv[1], argv[2], argc == 4? argv[3] : NULL);
     //*/
     
-    /*
-    testMultiProcess(argv[1], argv[2], argv[3]);
+    //*
+    testMultiProcess(argv[1], argv[2]);
     //*/
     
     
