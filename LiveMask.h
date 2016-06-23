@@ -2,7 +2,6 @@
 #define __LIVE_MASK_H__
 
 #include "MakeFrame.h"
-#include "VideoFeed.h"
 #include <opencv2/videoio.hpp>
 #include <opencv2/opencv.hpp>
 #include <thread>

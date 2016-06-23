@@ -32,14 +32,6 @@ void testProcess(char* idx1, char* idx2, char* outputnm)
     
     assignCameras(&interaction, &fill, i1, i2);
     
-    /*
-    fill.set(CAP_PROP_FRAME_WIDTH,  1920);
-    fill.set(CAP_PROP_FRAME_HEIGHT, 1080);
-    
-    interaction.set(CAP_PROP_FRAME_WIDTH,  1920);
-    interaction.set(CAP_PROP_FRAME_HEIGHT, 1080);
-    //*/    
-    
     VideoWriter* output = NULL;
         
     if(outputnm != NULL)
@@ -63,73 +55,11 @@ void testProcess(char* idx1, char* idx2, char* outputnm)
     liveMask(interaction, fill, Size(1920, 1080), 80, &flipvert, output);
 }
 
-/*
-void testMultiProcess(char* idx1, char* idx2)
-{
-    VideoCapture interaction;
-    VideoCapture fill;
-    
-    int index1, index2;
-    
-    sscanf(idx1, "%d", &index1);
-    sscanf(idx2, "%d", &index2);
-    
-    
-    assignCameras(&interaction, &fill, index1, index2);
-    
-    VideoFeed interactionfeed(&interaction);
-    VideoFeed fillfeed(&fill);
-    
-    cout << "fill: " << fill.get(CAP_PROP_FRAME_WIDTH) << " " << fill.get(CAP_PROP_FRAME_HEIGHT) << "\n";
-    cout << "interaction: " << interaction.get(CAP_PROP_FRAME_WIDTH) << " " << interaction.get(CAP_PROP_FRAME_HEIGHT) << "\n";
-            
-    int threshold = 30;
-    
-    Mat ctr;
-    interaction >> ctr;
-    liveMask(interactionfeed, fillfeed, threshold);
-}
-//*/
-
 int main(int argc, char** argv)
 {
-    /*
-    testFrame(argv[1], argv[2], argv[3], argv[4], argv[5]);                                    
-    //*/
-    
-    /*
-    testCamera();
-    //*/
-    
-    /*
-    makeControl();
-    //*/
-    
-    /*
-    testLiveMask(argv[1], argv[2]);
-    //*/
-    
-    /*
-    testLiveMaskColor(argv[1], argv[2], argv[3]);
-    //*/
-    
-    /*
-    testVideoWrite(argv[1], argv[2], argv[3]);
-    //*/
-    
-    /*
-    altTestMask(argv[1], argv[2]);
-    //*/
-    
     //*
     testProcess(argv[1], argv[2], argc == 4? argv[3] : NULL);
     //*/
-    
-    /*
-    testMultiProcess(argv[1], argv[2]);
-    //*/
-    
-    
     return 0;
 }
 
