@@ -63,10 +63,23 @@ int liveMask( cv::Mat control,
     if( !interaction.isOpened() || !fill.isOpened() )  // check if we succeeded
         return -1;
     
-    cv::namedWindow("Video", CV_WINDOW_NORMAL);
+    //*
+    fill.set(CAP_PROP_FRAME_WIDTH,  1920);
+    fill.set(CAP_PROP_FRAME_HEIGHT, 1080);
+    
+    interaction.set(CAP_PROP_FRAME_WIDTH,  1920);
+    interaction.set(CAP_PROP_FRAME_HEIGHT, 1080);
+    
+    Size resolution( fill.get(CAP_PROP_FRAME_WIDTH), fill.get(CAP_PROP_FRAME_HEIGHT) );
+    
+    //*/
+    cv::namedWindow("Video", CV_WINDOW_AUTOSIZE);
     cvSetWindowProperty("Video", CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
     
     Mat interactionframe;
+    Mat aux = control.clone();
+    
+    resize(aux, control, resolution);
         
     int blurkernelsize = 1;
     
@@ -75,6 +88,19 @@ int liveMask( cv::Mat control,
         interaction >> interactionframe; // get a new frame from camera
         if(reorient != NULL)
             reorient(interactionframe);
+        
+        //*
+        aux = interactionframe.clone();
+        cv::resize(aux, interactionframe, resolution);
+        
+        /*
+        imshow("Video", interactionframe);
+        waitKey(0);
+        imshow("Video", aux);
+        waitKey(0);
+        //*/
+        
+        //*/  
             
         fill >> fillframe;
         Mat output = makeFrameColor(control, interactionframe, fillframe, threshold, blurkernelsize);
