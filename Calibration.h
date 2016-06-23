@@ -14,9 +14,14 @@
 using namespace cv;
 using namespace std;
 
-void assignCameras(cv::VideoCapture* interaction, cv::VideoCapture* fill);
+/**
 void assignCameras(cv::VideoCapture* interaction, cv::VideoCapture* fill, int i1, int i2);
-void calibrateResolution(cv::VideoCapture source);
+
+
+Function to assign cameras with indexes i1 and i2 to VideoCaptures interaction and fill.
+The user sees the image of each camera and assigns accordingly.
+*/
+void assignCameras(cv::VideoCapture* interaction, cv::VideoCapture* fill, int i1, int i2);
 
 #endif
 

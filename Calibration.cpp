@@ -1,77 +1,32 @@
 #include "Calibration.h"
 
-void assignCameras(cv::VideoCapture* interaction, cv::VideoCapture* fill)
-{
-    namedWindow("Camera Test", CV_WINDOW_AUTOSIZE);
-    
-    for(short i = 0; i < MAX_CAM; i++)
-    {
-        VideoCapture* cap = new VideoCapture();
-        try
-        {
-            cap->open(i);
-        }
-        catch(...)
-        {
-            continue;
-        }
-        if( !cap->isOpened() )
-        {
-            delete cap;
-            continue;
-        }
-        
-        char key;
-        for(key = ' ';
-            tolower(key) != 'i' && tolower(key) != 'f' && tolower(key) != 'n';
-            key = waitKey(10)
-           )
-        {
-            Mat frame;
-            (*cap) >> frame; // get a new frame from camera
-            imshow("Camera Test", frame);
-        }
-        
-        //*
-        switch(key)
-        {
-            case 'i':
-                *interaction = *cap;
-                break;
-            
-            case 'f':
-                *fill = *cap;
-                break;
-            
-            case 'n':
-                delete cap;
-        }
-        //*/
-    }
-    destroyWindow("Camera Test");
-}
-
 void assignCameras(cv::VideoCapture* interaction, cv::VideoCapture* fill, int i1, int i2)
 {
+    VideoCapture* caps[MAX_CAM];
+    caps[0] = new VideoCapture();
+    caps[1] = new VideoCapture();
+    
+    try
+    {
+        caps[0]->open(i1);
+        caps[1]->open(i2);
+    }
+    catch(...)
+    {
+    }
+    
+    for(unsigned char i = 0; i < MAX_CAM; i++)
+        if( !caps[i]->isOpened() )
+        {
+            delete caps[i];
+            continue;
+        }
+    
     namedWindow("Camera Test", CV_WINDOW_AUTOSIZE);
     
-    for(short i = i1; i <= i2; i++)
+    for(unsigned char i = 0; i < MAX_CAM; i++)
     {
-        VideoCapture* cap = new VideoCapture();
-        try
-        {
-            cap->open(i);
-        }
-        catch(...)
-        {
-            continue;
-        }
-        if( !cap->isOpened() )
-        {
-            delete cap;
-            continue;
-        }
-        
+        VideoCapture* cap = caps[i];
         char key;
         for(key = ' ';
             tolower(key) != 'i' && tolower(key) != 'f' && tolower(key) != 'n';
@@ -79,11 +34,10 @@ void assignCameras(cv::VideoCapture* interaction, cv::VideoCapture* fill, int i1
            )
         {
             Mat frame;
-            (*cap) >> frame; // get a new frame from camera
+            (*cap) >> frame;
             imshow("Camera Test", frame);
         }
         
-        //*
         switch(key)
         {
             case 'i':
@@ -97,7 +51,6 @@ void assignCameras(cv::VideoCapture* interaction, cv::VideoCapture* fill, int i1
             case 'n':
                 delete cap;
         }
-        //*/
     }
     destroyWindow("Camera Test");
 }
