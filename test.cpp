@@ -255,7 +255,7 @@ void testProcess(char* idx1, char* idx2, char* outputnm)
     
     Mat ctr;
     interaction >> ctr;
-    liveMask(interaction, fill, 80, &flipvert, output);
+    liveMask(interaction, fill, Size(1920, 1080), 80, &flipvert, output);
 }
 
 void testMultiProcess(char* idx1, char* idx2)

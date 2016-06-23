@@ -8,6 +8,15 @@
 #include <thread>
 
 using namespace cv;
+
+#define THRESHOLD_MAX 255
+#define THRESHOLD_MIN 0
+#define THRESHOLD_STEP 1
+
+#define BL_KERNEL_MIN 1
+#define BL_KERNEL_MAX 15
+#define BL_KERNEL_STEP 2
+
 /*
 int liveMask(cv::Mat control, cv::VideoCapture interaction, cv::VideoCapture fill, int threshold);
 
@@ -17,6 +26,7 @@ between a frame from "interaction" and the "control" image
 int liveMask(cv::Mat control, cv::VideoCapture interaction, cv::VideoCapture fill, int threshold);
 int liveMask( cv::VideoCapture interaction,
               cv::VideoCapture fill,
+              cv::Size desiredres,
               int threshold,
               void (*reorient)(cv::Mat),
               cv::VideoWriter* video
