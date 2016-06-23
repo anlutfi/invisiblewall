@@ -1,93 +1,41 @@
 #include "MakeFrame.h"
 
-cv::Mat makeFrame(cv::Mat control, cv::Mat interaction, cv::Mat fill, int threshold)
+cv::Mat makeFrame(cv::Mat control, cv::Mat interaction, cv::Mat fill, int threshold, int blurkernelsize)
 {
+    //take the absolute difference between the interaction and the 
+    //control images and store it in diff
     cv::Mat diff; 
     cv::absdiff(control, interaction, diff);
     
-    cv::namedWindow("diff", CV_WINDOW_NORMAL);
-    imshow("diff", diff);
-    cv::waitKey(27);
-
-    
+    //initialize an image to store the final result
     cv::Mat result = cv::Mat::zeros(control.rows, control.cols, fill.type());
     
+    //initialize a blank mask
+    cv::Mat mask = cv::Mat::zeros(control.rows, control.cols, CV_8UC1);
+    
+    
+    //for every pixel in diff...
     for(int i = 0; i < diff.rows; i++)
     {
         for(int j = 0; j < diff.cols; j++)
         {
-            if(diff.at<uchar>(i, j) >= threshold)
-            {
-               result.at<cv::Vec3b>(i, j) = fill.at<cv::Vec3b>(i, j);
-            }
-        }
-    }
-    
-    return result;
-}
-
-cv::Mat makeFrameColor(cv::Mat control, cv::Mat interaction, cv::Mat fill, int threshold, int blurkernelsize)
-{
-    cv::Mat diff; 
-    cv::absdiff(control, interaction, diff);
-    
-    cv::Mat blurreddiff;
-    cv::medianBlur( diff, blurreddiff, blurkernelsize );
-    
-    cv::Mat result = cv::Mat::zeros(control.rows, control.cols, fill.type());
-    cv::Mat mask = cv::Mat::zeros(control.rows, control.cols, CV_8UC1);
-    
-    
-    for(int i = 0; i < blurreddiff.rows; i++)
-    {
-        for(int j = 0; j < blurreddiff.cols; j++)
-        {
-            cv::Vec3b pixel = blurreddiff.at<cv::Vec3b>(i, j);
+            cv::Vec3b pixel = diff.at<cv::Vec3b>(i, j);
             
+            //...if the absolute value of the pixel exceeds the threshold,
+            //set corresponding mask's pixel to white.
+            //Otherwise, leave it black.
             if( sqrt(pixel[0] * pixel[0] + pixel[1] * pixel[1] + pixel[2] * pixel[2]) >= threshold )
             {
                mask.at<unsigned char>(i, j) = 255;
             }
         }
     }
-    fill.copyTo(result, mask);
     
-    return result;
-}
-
-cv::Mat makeFrameColor( cv::Mat control,
-                        cv::Mat interaction,
-                        cv::Mat fill,
-                        int threshold,
-                        int blurkernelsize,
-                        void (*reorient)(cv::Mat)
-                      )
-{
-    cv::Mat diff; 
-    cv::absdiff(control, interaction, diff);
+    //apply median-blur to mask with kernel size of blurkernelsize
+    cv::Mat blurredmask;
+    cv::medianBlur(mask, blurredmask, blurkernelsize);
     
-    cv::Mat blurreddiff;
-    cv::medianBlur( diff, blurreddiff, blurkernelsize );
-    
-    cv::Mat result = cv::Mat::zeros(control.rows, control.cols, fill.type());
-    cv::Mat mask = cv::Mat::zeros(control.rows, control.cols, CV_8UC1);
-    
-    
-    for(int i = 0; i < blurreddiff.rows; i++)
-    {
-        for(int j = 0; j < blurreddiff.cols; j++)
-        {
-            cv::Vec3b pixel = blurreddiff.at<cv::Vec3b>(i, j);
-            
-            if( sqrt(pixel[0] * pixel[0] + pixel[1] * pixel[1] + pixel[2] * pixel[2]) >= threshold )
-            {
-               mask.at<unsigned char>(i, j) = 255;
-            }
-        }
-    }
-    fill.copyTo(result, mask);
-    
-    reorient(result);
-    
+    //apply mask to fill image and return it
+    fill.copyTo(result, blurredmask);
     return result;
 }
