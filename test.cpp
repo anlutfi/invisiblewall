@@ -57,7 +57,7 @@ void testProcess(char* idx1, char* idx2, char* w, char* h, char* outputnm)
     sscanf(w, "%d", &dwidth);
     sscanf(h, "%d", &dheight);
     
-    liveMaskMulti(interaction, fill, Size(dwidth, dheight), &flipvert, NULL, output);
+    liveMask(interaction, fill, Size(dwidth, dheight), &flipvert, NULL, output);
 }
 
 int main(int argc, char** argv)

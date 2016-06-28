@@ -17,9 +17,9 @@ int liveMask(cv::VideoCapture interaction,
     fill.set(CAP_PROP_FRAME_HEIGHT, desiredres.height);
     
     std::cout << "\nInteraction camera resolution: "
-              << fill.get(CAP_PROP_FRAME_WIDTH)
+              << interaction.get(CAP_PROP_FRAME_WIDTH)
               << " : "
-              << fill.get(CAP_PROP_FRAME_HEIGHT)
+              << interaction.get(CAP_PROP_FRAME_HEIGHT)
               << "\n";
     
     std::cout << "Fill camera resolution: "
@@ -142,9 +142,9 @@ int liveMaskMulti(cv::VideoCapture interaction,
     fill.set(CAP_PROP_FRAME_HEIGHT, desiredres.height);
     
     std::cout << "\nInteraction camera resolution: "
-              << fill.get(CAP_PROP_FRAME_WIDTH)
+              << interaction.get(CAP_PROP_FRAME_WIDTH)
               << " : "
-              << fill.get(CAP_PROP_FRAME_HEIGHT)
+              << interaction.get(CAP_PROP_FRAME_HEIGHT)
               << "\n";
     
     std::cout << "Fill camera resolution: "
@@ -254,7 +254,6 @@ int liveMaskMulti(cv::VideoCapture interaction,
     }
     
     videothd.join();
-    destroyAllWindows();
     
     return 0;
 }
@@ -273,32 +272,36 @@ int run(cv::Mat* control,
     
     while(true)
     {
-        //*
-        readjust_mtx.lock();
-        
-        //*
-        //get a frame from interaction and reorient it
-        interaction >> interactionframe; 
-        if(reorientInteraction != NULL)
-            reorientInteraction(interactionframe);
-        
-        //get a frame
-        fill >> fillframe;
-        if(reorientFill != NULL)
-            reorientFill(fillframe);
-        
-        //make a frame using interaction as mask and fill
-        Mat output = makeFrame(*control, interactionframe, fillframe, *threshold, *blurkernelsize);
-                
-        //display frame
-        imshow("Video", output);
-        
-        //if an output video is specified, write the frame into it
-        if(video != NULL)
-            video->write(output);
-        
-        readjust_mtx.unlock();
-    //*/
+        for(unsigned char i = 0; i < 100; i++)
+        {
+            //*
+            readjust_mtx.lock();
+            
+            //*
+            //get a frame from interaction and reorient it
+            interaction >> interactionframe; 
+            if(reorientInteraction != NULL)
+                reorientInteraction(interactionframe);
+            
+            //get a frame
+            fill >> fillframe;
+            if(reorientFill != NULL)
+                reorientFill(fillframe);
+            
+            //make a frame using interaction as mask and fill
+            Mat output = makeFrame(*control, interactionframe, fillframe, *threshold, *blurkernelsize);
+                    
+            //display frame
+            imshow("Video", output);
+            
+            //if an output video is specified, write the frame into it
+            if(video != NULL)
+                video->write(output);
+            
+            readjust_mtx.unlock();
+        //*/
+        }
+        waitKey(1);
     }
 }
 
