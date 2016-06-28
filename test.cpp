@@ -21,7 +21,7 @@ void flipvert(cv::Mat img)
     cv::flip(img, img, 1);
 }
 
-void testProcess(char* idx1, char* idx2, char* outputnm)
+void testProcess(char* idx1, char* idx2, char* w, char* h, char* outputnm)
 {
     VideoCapture interaction;
     VideoCapture fill;
@@ -52,13 +52,18 @@ void testProcess(char* idx1, char* idx2, char* outputnm)
     
     Mat ctr;
     interaction >> ctr;
-    liveMask(interaction, fill, Size(1920, 1080), 80, &flipvert, output);
+    
+    int width, height;
+    sscanf(w, "%d", &width);
+    sscanf(h, "%d", &height);
+    
+    liveMask(interaction, fill, Size(width, height), &flipvert, NULL, output);
 }
 
 int main(int argc, char** argv)
 {
     //*
-    testProcess(argv[1], argv[2], argc == 4? argv[3] : NULL);
+    testProcess(argv[1], argv[2], argv[3], argv[4], argc == 6 ? argv[5] : NULL);
     //*/
     return 0;
 }

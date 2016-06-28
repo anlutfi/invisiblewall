@@ -1,6 +1,11 @@
 #include "MakeFrame.h"
 
-cv::Mat makeFrame(cv::Mat control, cv::Mat interaction, cv::Mat fill, int threshold, int blurkernelsize)
+cv::Mat makeFrame(cv::Mat control,
+                  cv::Mat interaction,
+                  cv::Mat fill,
+                  unsigned char threshold,
+                  int blurkernelsize
+                 )
 {
     //take the absolute difference between the interaction and the 
     //control images and store it in diff
@@ -34,6 +39,9 @@ cv::Mat makeFrame(cv::Mat control, cv::Mat interaction, cv::Mat fill, int thresh
     //apply median-blur to mask with kernel size of blurkernelsize
     cv::Mat blurredmask;
     cv::medianBlur(mask, blurredmask, blurkernelsize);
+    
+    //resize mask's resolution to math fill's
+    cv::resize( blurredmask, blurredmask, cv::Size(fill.cols, fill.rows) );
     
     //apply mask to fill image and return it
     fill.copyTo(result, blurredmask);

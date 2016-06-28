@@ -1,11 +1,11 @@
 #include "LiveMask.h"
 
-int liveMask( cv::VideoCapture interaction,
-              cv::VideoCapture fill,
-              cv::Size desiredres,
-              int threshold,
-              void (*reorient)(cv::Mat),
-              cv::VideoWriter* video
+int liveMask(cv::VideoCapture interaction,
+             cv::VideoCapture fill,
+             cv::Size desiredres,
+             void (*reorientInteraction)(cv::Mat),
+             void (*reorientFill)(cv::Mat),
+             cv::VideoWriter* video
             )
 {
     //check if VideoCaptures are working
@@ -29,28 +29,31 @@ int liveMask( cv::VideoCapture interaction,
     Size resolution( fill.get(CAP_PROP_FRAME_WIDTH), fill.get(CAP_PROP_FRAME_HEIGHT) );
     
     //make a black control image with the correct type and resolution
-    Mat control = Mat::zeros( resolution.height, resolution.width, fillframe.type() );
+    //Mat control = Mat::zeros( resolution.height, resolution.width, fillframe.type() );
+    Mat control = Mat::zeros( interaction.get(CAP_PROP_FRAME_HEIGHT), interaction.get(CAP_PROP_FRAME_WIDTH), fillframe.type() );
     
     //open an output window and set it to full-screen
     cv::namedWindow("Video", CV_WINDOW_NORMAL);
     cvSetWindowProperty("Video", CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);    
-        
+    
+    //the threshold to be used for pixel election on the mask making process
+    unsigned char threshold = DEFAULT_THRESHOLD;    
+    
     //the size of the kernel to be used on the mask's median blur
     int blurkernelsize = BL_KERNEL_MIN;
     
     //keep streaming until user presses esc(27)
-    for(int key = -1; key != 27; key = waitKey(10) % 256)
+    for(unsigned char key = -1; key != 27; key = waitKey(10) % 256)
     {
         //get a frame from interaction and reorient it
         interaction >> interactionframe; 
-        if(reorient != NULL)
-            reorient(interactionframe);
-        
-        //scale it to the same size as fill's
-        cv::resize(interactionframe, interactionframe, resolution);
+        if(reorientInteraction != NULL)
+            reorientInteraction(interactionframe);
         
         //get a frame
         fill >> fillframe;
+        if(reorientFill != NULL)
+            reorientFill(fillframe);
         
         //make a frame using interaction as mask and fill
         Mat output = makeFrame(control, interactionframe, fillframe, threshold, blurkernelsize);
@@ -63,30 +66,30 @@ int liveMask( cv::VideoCapture interaction,
             video->write(output);
         
         //get user input and adjust accordingly
-        switch( (char)key )
+        switch(key)
         {
             //increase threshold for a pixel to be included in the mask
             case '=':
                 threshold = min(threshold + THRESHOLD_STEP, THRESHOLD_MAX);
-                std::cout << "Threshold = " << threshold << "\n";
+                std::cout << "Threshold = " << (int)threshold << "\n";
                 break;
             
             //decrease threshold
             case '-':
                 threshold = max(threshold - THRESHOLD_STEP, THRESHOLD_MIN);
-                std::cout << "Threshold = " << threshold << "\n";
+                std::cout << "Threshold = " << (int)threshold << "\n";
                 break;
             
             //increase the threshold ten times the usual step
             case ']':
                 threshold = min(threshold + 10 * THRESHOLD_STEP, THRESHOLD_MAX);
-                std::cout << "Threshold = " << threshold << "\n";
+                std::cout << "Threshold = " << (int)threshold << "\n";
                 break;
             
             //decrease the threshold ten times the usual step
             case '[':
                 threshold = max(threshold - 10 * THRESHOLD_STEP, THRESHOLD_MIN);
-                std::cout << "Threshold = " << threshold << "\n";
+                std::cout << "Threshold = " << (int)threshold << "\n";
                 break;
             
             //increase kernel size for median blur

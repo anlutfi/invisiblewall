@@ -23,6 +23,11 @@ threshold is a number between 0 and 255. Corresponding pixels in control and int
 
 blurkernelsize is the size of the kernel to be used on the median-blur to reduce noise on the mask. 
 */
-cv::Mat makeFrame(cv::Mat control, cv::Mat interaction, cv::Mat fill, int threshold, int blurkernelsize);
+cv::Mat makeFrame(cv::Mat control,
+                  cv::Mat interaction,
+                  cv::Mat fill,
+                  unsigned char threshold,
+                  int blurkernelsize
+                 );
 
 #endif
