@@ -5,6 +5,7 @@
 #include <opencv2/videoio.hpp>
 #include <opencv2/opencv.hpp>
 #include <thread>
+#include <mutex>
 
 using namespace cv;
 
@@ -31,6 +32,28 @@ int liveMask(cv::VideoCapture interaction,
              void (*reorientFill)(cv::Mat),
              cv::VideoWriter* video
             );
+
+extern std::mutex readjust_mtx;
+
+int liveMaskMulti(cv::VideoCapture interaction,
+                  cv::VideoCapture fill,
+                  cv::Size desiredres,
+                  void (*reorientInteraction)(cv::Mat),
+                  void (*reorientFill)(cv::Mat),
+                  cv::VideoWriter* video
+                 );
+                 
+int run(cv::Mat* control,
+        cv::VideoCapture interaction,
+        cv::VideoCapture fill,
+        unsigned char* threshold,
+        int* blurkernelsize,
+        void (*reorientInteraction)(cv::Mat),
+        void (*reorientFill)(cv::Mat),
+        cv::VideoWriter* video
+       );
+                 
+
 
 #endif
 

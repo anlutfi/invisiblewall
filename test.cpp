@@ -53,11 +53,11 @@ void testProcess(char* idx1, char* idx2, char* w, char* h, char* outputnm)
     Mat ctr;
     interaction >> ctr;
     
-    int width, height;
-    sscanf(w, "%d", &width);
-    sscanf(h, "%d", &height);
+    int dwidth, dheight;
+    sscanf(w, "%d", &dwidth);
+    sscanf(h, "%d", &dheight);
     
-    liveMask(interaction, fill, Size(width, height), &flipvert, NULL, output);
+    liveMaskMulti(interaction, fill, Size(dwidth, dheight), &flipvert, NULL, output);
 }
 
 int main(int argc, char** argv)

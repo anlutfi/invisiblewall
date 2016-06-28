@@ -53,4 +53,6 @@ void assignCameras(cv::VideoCapture* interaction, cv::VideoCapture* fill, int i1
         }
     }
     destroyWindow("Camera Test");
+    destroyAllWindows();
+    waitKey(1);
 }
