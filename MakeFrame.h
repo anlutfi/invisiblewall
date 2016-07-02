@@ -27,7 +27,9 @@ cv::Mat makeFrame(cv::Mat control,
                   cv::Mat interaction,
                   cv::Mat fill,
                   unsigned char threshold,
-                  int blurkernelsize
+                  int blurkernelsize,
+                  int offsetx,
+                  int offsety
                  );
 
 #endif

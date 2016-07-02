@@ -5,6 +5,8 @@ int liveMask(cv::VideoCapture interaction,
              cv::Size desiredres,
              void (*reorientInteraction)(cv::Mat),
              void (*reorientFill)(cv::Mat),
+             int offsetstepx,
+             int offsetstepy,
              cv::VideoWriter* video
             )
 {
@@ -12,7 +14,7 @@ int liveMask(cv::VideoCapture interaction,
     if( !interaction.isOpened() || !fill.isOpened() )
         return -1;
     
-    //Try to set both fill and interaction cameras' resolutions to desiredres
+    //Try to set fill camera's resolution to desiredres
     fill.set(CAP_PROP_FRAME_WIDTH, desiredres.width);
     fill.set(CAP_PROP_FRAME_HEIGHT, desiredres.height);
     
@@ -36,11 +38,16 @@ int liveMask(cv::VideoCapture interaction,
     
     //get the actual resolution from the fill camera
     //after trying to set it to desiredres
-    Size resolution( fill.get(CAP_PROP_FRAME_WIDTH), fill.get(CAP_PROP_FRAME_HEIGHT) );
+    Size resolution(fill.get(CAP_PROP_FRAME_WIDTH),
+                    fill.get(CAP_PROP_FRAME_HEIGHT)
+                   );
     
     //make a black control image with the correct type and resolution
     //Mat control = Mat::zeros( resolution.height, resolution.width, fillframe.type() );
-    Mat control = Mat::zeros( interaction.get(CAP_PROP_FRAME_HEIGHT), interaction.get(CAP_PROP_FRAME_WIDTH), fillframe.type() );
+    Mat control = Mat::zeros(interaction.get(CAP_PROP_FRAME_HEIGHT),
+                             interaction.get(CAP_PROP_FRAME_WIDTH),
+                             fillframe.type()
+                            );
     
     //open an output window and set it to full-screen
     cv::namedWindow("Video", CV_WINDOW_NORMAL);
@@ -52,8 +59,12 @@ int liveMask(cv::VideoCapture interaction,
     //the size of the kernel to be used on the mask's median blur
     int blurkernelsize = BL_KERNEL_MIN;
     
+    //horizontal and vertical offsets for the mask
+    int maskoffsetx = 0;
+    int maskoffsety = 0;
+    
     //keep streaming until user presses esc(27)
-    for(unsigned char key = -1; key != 27; key = waitKey(10) % 256)
+    for(int key = -1; key != 27; key = waitKey(10) % 256)
     {
         //get a frame from interaction and reorient it
         interaction >> interactionframe; 
@@ -66,7 +77,14 @@ int liveMask(cv::VideoCapture interaction,
             reorientFill(fillframe);
         
         //make a frame using interaction as mask and fill
-        Mat output = makeFrame(control, interactionframe, fillframe, threshold, blurkernelsize);
+        Mat output = makeFrame(control,
+                               interactionframe,
+                               fillframe,
+                               threshold,
+                               blurkernelsize,
+                               maskoffsetx,
+                               maskoffsety
+                              );
         
         //display frame
         imshow("Video", output);
@@ -117,12 +135,42 @@ int liveMask(cv::VideoCapture interaction,
             //generate a new control image(recalibration)
             case 'c':
                 control = interactionframe.clone();
+                break;
+                
+            //*
+            case KEY_UP % 256:
+                maskoffsety = abs(maskoffsety - offsetstepy) <= resolution.height ? maskoffsety - offsetstepy : -resolution.height + 1;
+                std::cout << "Y offset = " << maskoffsety << "\n";
+                break;
+            
+            case KEY_DOWN % 256:
+                maskoffsety = abs(maskoffsety + offsetstepy) <= resolution.height ? maskoffsety + offsetstepy : resolution.height - 1;
+                std::cout << "Y offset = " << maskoffsety << "\n";
+                break;
+                
+            case KEY_LEFT % 256:
+                maskoffsetx = abs(maskoffsetx - offsetstepx) <= resolution.width ? maskoffsetx - offsetstepx : -resolution.width + 1;
+                std::cout << "X offset = " << maskoffsetx << "\n";
+                break;
+            
+            case KEY_RIGHT % 256:
+                maskoffsetx = abs(maskoffsetx + offsetstepx) <= resolution.width ? maskoffsetx + offsetstepx : resolution.width - 1;
+                std::cout << "X offset = " << maskoffsetx << "\n";
+                break;
+            
+            case '0':
+                maskoffsetx = maskoffsety = 0;
+                std::cout << "X offset = " << maskoffsetx << "\n";
+                std::cout << "Y offset = " << maskoffsety << "\n";
+                break;
+            //*/    
         }
         
     }
     return 0;
 }
 
+/*
 std::mutex readjust_mtx;
 
 int liveMaskMulti(cv::VideoCapture interaction,
@@ -188,7 +236,7 @@ int liveMaskMulti(cv::VideoCapture interaction,
                          reorientFill,
                          video
                         );
-    //*/
+    
     
     //keep streaming until user presses esc(27)
     for(unsigned char key = -1; key != 27; key = waitKey(10) % 256)
@@ -299,12 +347,12 @@ int run(cv::Mat* control,
                 video->write(output);
             
             readjust_mtx.unlock();
-        //*/
+        
         }
         waitKey(1);
     }
 }
-
+//*/
 
 
 

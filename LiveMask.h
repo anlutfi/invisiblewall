@@ -4,9 +4,10 @@
 #include "MakeFrame.h"
 #include <opencv2/videoio.hpp>
 #include <opencv2/opencv.hpp>
+/*
 #include <thread>
 #include <mutex>
-
+//*/
 using namespace cv;
 
 #define THRESHOLD_MAX 255
@@ -19,6 +20,16 @@ using namespace cv;
 
 #define DEFAULT_THRESHOLD 100
 
+#define KEY_UP 65362
+#define KEY_DOWN 65364
+#define KEY_LEFT 65361
+#define KEY_RIGHT 65363
+
+/*
+#define X_STEP 200
+#define Y_STEP 200
+//*/
+
 /*
 int liveMask(cv::Mat control, cv::VideoCapture interaction, cv::VideoCapture fill, int threshold);
 
@@ -30,9 +41,12 @@ int liveMask(cv::VideoCapture interaction,
              cv::Size desiredres,
              void (*reorientInteraction)(cv::Mat),
              void (*reorientFill)(cv::Mat),
+             int offsetstepx,
+             int offsetstepy,
              cv::VideoWriter* video
             );
 
+/*
 extern std::mutex readjust_mtx;
 
 int liveMaskMulti(cv::VideoCapture interaction,
@@ -53,7 +67,7 @@ int run(cv::Mat* control,
         cv::VideoWriter* video
        );
                  
-
+//*/
 
 #endif
 

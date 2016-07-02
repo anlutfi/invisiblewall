@@ -17,11 +17,10 @@ using namespace std;
 
 void flipvert(cv::Mat img)
 {
-    //cv::Mat cpy = img->clone();
     cv::flip(img, img, 1);
 }
 
-void testProcess(char* idx1, char* idx2, char* w, char* h, char* outputnm)
+void testProcess(char* idx1, char* idx2, char* w, char* h, char* offsetstepnm, char* outputnm)
 {
     VideoCapture interaction;
     VideoCapture fill;
@@ -57,13 +56,16 @@ void testProcess(char* idx1, char* idx2, char* w, char* h, char* outputnm)
     sscanf(w, "%d", &dwidth);
     sscanf(h, "%d", &dheight);
     
-    liveMask(interaction, fill, Size(dwidth, dheight), &flipvert, NULL, output);
+    int offsetstep;
+    sscanf(offsetstepnm, "%d", &offsetstep);
+    
+    liveMask(interaction, fill, Size(dwidth, dheight), &flipvert, NULL, offsetstep, offsetstep, output);
 }
 
 int main(int argc, char** argv)
 {
     //*
-    testProcess(argv[1], argv[2], argv[3], argv[4], argc == 6 ? argv[5] : NULL);
+    testProcess(argv[1], argv[2], argv[3], argv[4], argv[5], argc == 7 ? argv[6] : NULL);
     //*/
     return 0;
 }
