@@ -102,14 +102,21 @@ int main(int argc, char** argv)
         
     if(argc == 7)
     {
-        double w = interaction.get(CV_CAP_PROP_FRAME_WIDTH); //get the width of frames of the video
-        double h = interaction.get(CV_CAP_PROP_FRAME_HEIGHT); //get the height of frames of the video
+        //get the width and height of frames of the video
+        double w = interaction.get(CV_CAP_PROP_FRAME_WIDTH); 
+        double h = interaction.get(CV_CAP_PROP_FRAME_HEIGHT);
         
         Size frameSize(static_cast<int>(w), static_cast<int>(h));
         
-        output = new VideoWriter (argv[6], CV_FOURCC('H','2','6','4'), 20, frameSize, true);
+        output = new VideoWriter (argv[6],
+                                  CV_FOURCC('H','2','6','4'),
+                                  20,
+                                  frameSize,
+                                  true
+                                 );
         
-        if ( !output->isOpened() ) //if not initialize the VideoWriter successfully, exit the program
+        //if the VideoWriter is not initialized correctly, exit the program
+        if ( !output->isOpened() ) 
         {
             cout << "ERROR: Failed to write the video" << endl;
             return 1;
@@ -130,7 +137,6 @@ int main(int argc, char** argv)
              output
             );
     
-    //testProcess(argv[1], argv[2], argv[3], argv[4], argv[5], argc == 7 ? argv[6] : NULL);
     return 0;
 }
 

@@ -15,7 +15,7 @@ cv::Mat makeFrame(cv::Mat control,
     cv::absdiff(control, interaction, diff);
     
     //initialize an image to store the final result
-    cv::Mat result = cv::Mat::zeros(fill.rows, fill.cols, fill.type());
+    cv::Mat result = cv::Mat::zeros( fill.rows, fill.cols, fill.type() );
     
     //initialize a blank mask
     cv::Mat mask = cv::Mat::zeros(control.rows, control.cols, CV_8UC1);
@@ -90,7 +90,7 @@ cv::Mat makeFrame(cv::Mat control,
                        cv::Range(0, blurredmask.rows - offsety),
                        cv::Range(-offsetx, blurredmask.cols)
                       );
-            roit.copyTo(finalmask(cv::Rect(0, offsety, roit.cols, roit.rows)));
+            roit.copyTo( finalmask(cv::Rect(0, offsety, roit.cols, roit.rows)) );
         }
         else
         {
@@ -98,7 +98,7 @@ cv::Mat makeFrame(cv::Mat control,
                        cv::Range(-offsety, blurredmask.rows),
                        cv::Range(-offsetx, blurredmask.cols)
                       );
-            roit.copyTo(finalmask(cv::Rect(0, 0, roit.cols, roit.rows)));
+            roit.copyTo( finalmask(cv::Rect(0, 0, roit.cols, roit.rows)) );
         }
         
     }

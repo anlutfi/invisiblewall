@@ -15,12 +15,6 @@
 
 #define MAX_CAM 2
 
-/*
-#define LEFT_KEY 81
-#define RIGHT_KEY 83
-#define UP_KEY 82
-#define DOWN_KEY 84
-//*/
 using namespace cv;
 using namespace std;
 
@@ -31,10 +25,10 @@ void assignCameras(cv::VideoCapture* interaction, cv::VideoCapture* fill, int i1
 Function to assign cameras with indexes i1 and i2 to VideoCaptures interaction and fill.
 The user sees the image of each camera and assigns accordingly.
 */
-void assignCameras(cv::VideoCapture* interaction, cv::VideoCapture* fill, int i1, int i2);
+void assignCameras(VideoCapture* interaction, VideoCapture* fill, int i1, int i2);
 
-void calibrate(cv::VideoCapture interaction,
-               cv::VideoCapture fill,
+void calibrate(VideoCapture interaction,
+               VideoCapture fill,
                unsigned char* threshold,
                int* blurkernelsize,
                int* offsetx,

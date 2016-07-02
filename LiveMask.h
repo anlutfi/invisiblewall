@@ -8,32 +8,7 @@
 #include <opencv2/opencv.hpp>
 
 
-/*
-#include <thread>
-#include <mutex>
-//*/
 using namespace cv;
-
-/*
-#define THRESHOLD_MAX 255
-#define THRESHOLD_MIN 0
-#define THRESHOLD_STEP 1
-
-#define BL_KERNEL_MIN 1
-#define BL_KERNEL_MAX 15
-#define BL_KERNEL_STEP 2
-
-#define DEFAULT_THRESHOLD 100
-
-#define KEY_UP 65362
-#define KEY_DOWN 65364
-#define KEY_LEFT 65361
-#define KEY_RIGHT 65363
-//*/
-/*
-#define X_STEP 200
-#define Y_STEP 200
-//*/
 
 /*
 int liveMask(cv::Mat control, cv::VideoCapture interaction, cv::VideoCapture fill, int threshold);
@@ -54,28 +29,6 @@ int liveMask(cv::VideoCapture interaction,
              cv::VideoWriter* video
             );
 
-/*
-extern std::mutex readjust_mtx;
-
-int liveMaskMulti(cv::VideoCapture interaction,
-                  cv::VideoCapture fill,
-                  cv::Size desiredres,
-                  void (*reorientInteraction)(cv::Mat),
-                  void (*reorientFill)(cv::Mat),
-                  cv::VideoWriter* video
-                 );
-                 
-int run(cv::Mat* control,
-        cv::VideoCapture interaction,
-        cv::VideoCapture fill,
-        unsigned char* threshold,
-        int* blurkernelsize,
-        void (*reorientInteraction)(cv::Mat),
-        void (*reorientFill)(cv::Mat),
-        cv::VideoWriter* video
-       );
-                 
-//*/
 
 #endif
 

@@ -1,6 +1,6 @@
 #include "Calibration.h"
 
-void assignCameras(cv::VideoCapture* interaction, cv::VideoCapture* fill, int i1, int i2)
+void assignCameras(VideoCapture* interaction, VideoCapture* fill, int i1, int i2)
 {
     VideoCapture* caps[MAX_CAM];
     caps[0] = new VideoCapture();
@@ -29,7 +29,7 @@ void assignCameras(cv::VideoCapture* interaction, cv::VideoCapture* fill, int i1
         VideoCapture* cap = caps[i];
         char key;
         for(key = ' ';
-            tolower(key) != 'i' && tolower(key) != 'f' && tolower(key) != 'n';
+            tolower(key) != 'i' && tolower(key) != 'e' && tolower(key) != 'n';
             key = waitKey(10)
            )
         {
@@ -44,7 +44,7 @@ void assignCameras(cv::VideoCapture* interaction, cv::VideoCapture* fill, int i1
                 *interaction = *cap;
                 break;
             
-            case 'f':
+            case 'e':
                 *fill = *cap;
                 break;
             
@@ -57,8 +57,8 @@ void assignCameras(cv::VideoCapture* interaction, cv::VideoCapture* fill, int i1
     waitKey(1);
 }
 
-void calibrate(cv::VideoCapture interaction,
-               cv::VideoCapture fill,
+void calibrate(VideoCapture interaction,
+               VideoCapture fill,
                unsigned char* threshold,
                int* blurkernelsize,
                int* offsetx,
@@ -125,22 +125,22 @@ void calibrate(cv::VideoCapture interaction,
         {
             //increase threshold for a pixel to be included in the mask
             case RIGHT_KEY:
-                *threshold = cv::min(*threshold + THRESHOLD_STEP, THRESHOLD_MAX);
+                *threshold = min(*threshold + THRESHOLD_STEP, THRESHOLD_MAX);
                 break;
             
             //decrease threshold
             case LEFT_KEY:
-                *threshold = cv::max(*threshold - THRESHOLD_STEP, THRESHOLD_MIN);
+                *threshold = max(*threshold - THRESHOLD_STEP, THRESHOLD_MIN);
                 break;
             
             //increase the threshold ten times the usual step
             case UP_KEY:
-                *threshold = cv::min(*threshold + 10 * THRESHOLD_STEP, THRESHOLD_MAX);
+                *threshold = min(*threshold + 10 * THRESHOLD_STEP, THRESHOLD_MAX);
                 break;
             
             //decrease the threshold ten times the usual step
             case DOWN_KEY:
-                *threshold = cv::max(*threshold - 10 * THRESHOLD_STEP, THRESHOLD_MIN);
+                *threshold = max(*threshold - 10 * THRESHOLD_STEP, THRESHOLD_MIN);
                 break;
         }
     }
@@ -163,12 +163,16 @@ void calibrate(cv::VideoCapture interaction,
         {
             //increase kernel size for median blur
             case RIGHT_KEY:
-                *blurkernelsize = min(*blurkernelsize + BL_KERNEL_STEP, BL_KERNEL_MAX);
+                *blurkernelsize = min(*blurkernelsize + BL_KERNEL_STEP,
+                                      BL_KERNEL_MAX
+                                     );
                 break;
             
             //decerase kernel size
             case LEFT_KEY:
-                *blurkernelsize = max(*blurkernelsize - BL_KERNEL_STEP, BL_KERNEL_MIN);
+                *blurkernelsize = max(*blurkernelsize - BL_KERNEL_STEP,
+                                      BL_KERNEL_MIN
+                                     );
                 break;
         }
     }
@@ -192,19 +196,23 @@ void calibrate(cv::VideoCapture interaction,
         switch(key)
         {
             case LEFT_KEY:
-                *offsetx = abs(*offsetx - offsetstep) <= resolution.width ? *offsetx - offsetstep : -resolution.width + 1;
+                *offsetx = abs(*offsetx - offsetstep) <= resolution.width ?
+                           *offsetx - offsetstep : -resolution.width + 1;
                 break;
                 
             case RIGHT_KEY:
-                *offsetx = abs(*offsetx + offsetstep) <= resolution.width ? *offsetx + offsetstep : resolution.width - 1;
+                *offsetx = abs(*offsetx + offsetstep) <= resolution.width ?
+                           *offsetx + offsetstep : resolution.width - 1;
                 break;
                 
             case UP_KEY:
-                *offsety = abs(*offsety - offsetstep) <= resolution.height ? *offsety - offsetstep : -resolution.height + 1;
+                *offsety = abs(*offsety - offsetstep) <= resolution.height ?
+                           *offsety - offsetstep : -resolution.height + 1;
                 break;
                 
             case DOWN_KEY:
-                *offsety = abs(*offsety + offsetstep) <= resolution.height ? *offsety + offsetstep : resolution.height - 1;
+                *offsety = abs(*offsety + offsetstep) <= resolution.height ?
+                           *offsety + offsetstep : resolution.height - 1;
                 break;
             
             case '0':
