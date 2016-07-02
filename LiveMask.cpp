@@ -5,8 +5,11 @@ int liveMask(cv::VideoCapture interaction,
              cv::Size desiredres,
              void (*reorientInteraction)(cv::Mat),
              void (*reorientFill)(cv::Mat),
-             int offsetstepx,
-             int offsetstepy,
+             unsigned char threshold,
+             int blurkernelsize,
+             int offsetstep,
+             int maskoffsetx,
+             int maskoffsety,
              cv::VideoWriter* video
             )
 {
@@ -54,17 +57,13 @@ int liveMask(cv::VideoCapture interaction,
     cvSetWindowProperty("Video", CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);    
     
     //the threshold to be used for pixel election on the mask making process
-    unsigned char threshold = DEFAULT_THRESHOLD;    
+    //unsigned char threshold = DEFAULT_THRESHOLD;    
     
     //the size of the kernel to be used on the mask's median blur
-    int blurkernelsize = BL_KERNEL_MIN;
-    
-    //horizontal and vertical offsets for the mask
-    int maskoffsetx = 0;
-    int maskoffsety = 0;
+    //int blurkernelsize = BL_KERNEL_MIN;
     
     //keep streaming until user presses esc(27)
-    for(int key = -1; key != 27; key = waitKey(10) % 256)
+    for(unsigned char key = -1; key != 27; key = waitKey(10) % 256)
     {
         //get a frame from interaction and reorient it
         interaction >> interactionframe; 
@@ -138,23 +137,23 @@ int liveMask(cv::VideoCapture interaction,
                 break;
                 
             //*
-            case KEY_UP % 256:
-                maskoffsety = abs(maskoffsety - offsetstepy) <= resolution.height ? maskoffsety - offsetstepy : -resolution.height + 1;
+            case UP_KEY:
+                maskoffsety = abs(maskoffsety - offsetstep) <= resolution.height ? maskoffsety - offsetstep : -resolution.height + 1;
                 std::cout << "Y offset = " << maskoffsety << "\n";
                 break;
             
-            case KEY_DOWN % 256:
-                maskoffsety = abs(maskoffsety + offsetstepy) <= resolution.height ? maskoffsety + offsetstepy : resolution.height - 1;
+            case DOWN_KEY:
+                maskoffsety = abs(maskoffsety + offsetstep) <= resolution.height ? maskoffsety + offsetstep : resolution.height - 1;
                 std::cout << "Y offset = " << maskoffsety << "\n";
                 break;
                 
-            case KEY_LEFT % 256:
-                maskoffsetx = abs(maskoffsetx - offsetstepx) <= resolution.width ? maskoffsetx - offsetstepx : -resolution.width + 1;
+            case LEFT_KEY:
+                maskoffsetx = abs(maskoffsetx - offsetstep) <= resolution.width ? maskoffsetx - offsetstep : -resolution.width + 1;
                 std::cout << "X offset = " << maskoffsetx << "\n";
                 break;
             
-            case KEY_RIGHT % 256:
-                maskoffsetx = abs(maskoffsetx + offsetstepx) <= resolution.width ? maskoffsetx + offsetstepx : resolution.width - 1;
+            case RIGHT_KEY:
+                maskoffsetx = abs(maskoffsetx + offsetstep) <= resolution.width ? maskoffsetx + offsetstep : resolution.width - 1;
                 std::cout << "X offset = " << maskoffsetx << "\n";
                 break;
             

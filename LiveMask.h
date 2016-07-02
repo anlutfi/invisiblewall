@@ -1,15 +1,20 @@
 #ifndef __LIVE_MASK_H__
 #define __LIVE_MASK_H__
 
+#include "commons.h"
+
 #include "MakeFrame.h"
 #include <opencv2/videoio.hpp>
 #include <opencv2/opencv.hpp>
+
+
 /*
 #include <thread>
 #include <mutex>
 //*/
 using namespace cv;
 
+/*
 #define THRESHOLD_MAX 255
 #define THRESHOLD_MIN 0
 #define THRESHOLD_STEP 1
@@ -24,7 +29,7 @@ using namespace cv;
 #define KEY_DOWN 65364
 #define KEY_LEFT 65361
 #define KEY_RIGHT 65363
-
+//*/
 /*
 #define X_STEP 200
 #define Y_STEP 200
@@ -41,8 +46,11 @@ int liveMask(cv::VideoCapture interaction,
              cv::Size desiredres,
              void (*reorientInteraction)(cv::Mat),
              void (*reorientFill)(cv::Mat),
-             int offsetstepx,
-             int offsetstepy,
+             unsigned char threshold,
+             int blurkernelsize,
+             int offsetstep,
+             int maskoffsetx,
+             int maskoffsety,
              cv::VideoWriter* video
             );
 
