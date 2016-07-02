@@ -33,6 +33,17 @@ cv::Mat makeFrame(cv::Mat control,
                   unsigned char threshold,
                   int blurkernelsize,
                   int offsetx,
+                  int offsety,
+                  cv::Point camguardpos,
+                  cv::Size camguardsize
+                 );
+                 
+cv::Mat makeFrame(cv::Mat control,
+                  cv::Mat interaction,
+                  cv::Mat fill,
+                  unsigned char threshold,
+                  int blurkernelsize,
+                  int offsetx,
                   int offsety
                  );
 

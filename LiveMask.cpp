@@ -10,7 +10,8 @@ int liveMask(cv::VideoCapture interaction,
              int offsetstep,
              int maskoffsetx,
              int maskoffsety,
-             cv::VideoWriter* video
+             cv::VideoWriter* video,
+             cv::Size camguardsize
             )
 {
     //check if VideoCaptures are working
@@ -62,6 +63,9 @@ int liveMask(cv::VideoCapture interaction,
     //the size of the kernel to be used on the mask's median blur
     //int blurkernelsize = BL_KERNEL_MIN;
     
+    Point camguardpos(fillframe.cols / 2, fillframe.rows / 2);
+    //Size camguardsize(CAMGUARD_SIZE, CAMGUARD_SIZE);
+    
     //keep streaming until user presses esc(27)
     for(unsigned char key = -1; key != 27; key = waitKey(10) % 256)
     {
@@ -75,6 +79,7 @@ int liveMask(cv::VideoCapture interaction,
         if(reorientFill != NULL)
             reorientFill(fillframe);
         
+        
         //make a frame using interaction as mask and fill
         Mat output = makeFrame(control,
                                interactionframe,
@@ -82,7 +87,9 @@ int liveMask(cv::VideoCapture interaction,
                                threshold,
                                blurkernelsize,
                                maskoffsetx,
-                               maskoffsety
+                               maskoffsety/*,
+                               camguardpos,
+                               camguardsize*/
                               );
         
         //display frame
@@ -166,6 +173,25 @@ int liveMask(cv::VideoCapture interaction,
                 std::cout << "X offset = " << maskoffsetx << "\n";
                 std::cout << "Y offset = " << maskoffsety << "\n";
                 break;
+                
+            case 'w':
+                camguardpos.y = max(camguardpos.y - CAMGUARD_STEP, 0);
+                break;
+                
+            case 's':
+                camguardpos.y = min(camguardpos.y + CAMGUARD_STEP,
+                                    resolution.height - 1
+                                   );
+                break;
+                
+            case 'a':
+                camguardpos.x = max(camguardpos.x - CAMGUARD_STEP, 0);
+                break;
+                
+            case 'd':
+                camguardpos.x = min(camguardpos.x + CAMGUARD_STEP,
+                                    resolution.width - 1
+                                   );
             //*/    
         }
         

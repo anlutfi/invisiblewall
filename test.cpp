@@ -78,6 +78,10 @@ int main(int argc, char** argv)
     int offsetstep;
     sscanf(argv[5], "%d", &offsetstep);
     
+    int sz;
+    sscanf(argv[6], "%d", &sz);
+    Size camguardsize(sz, sz);
+    
     VideoCapture interaction;
     VideoCapture fill;
     
@@ -100,7 +104,7 @@ int main(int argc, char** argv)
     
     VideoWriter* output = NULL;
         
-    if(argc == 7)
+    if(argc == 8)
     {
         //get the width and height of frames of the video
         double w = interaction.get(CV_CAP_PROP_FRAME_WIDTH); 
@@ -108,7 +112,7 @@ int main(int argc, char** argv)
         
         Size frameSize(static_cast<int>(w), static_cast<int>(h));
         
-        output = new VideoWriter (argv[6],
+        output = new VideoWriter (argv[7],
                                   CV_FOURCC('H','2','6','4'),
                                   20,
                                   frameSize,
@@ -134,7 +138,8 @@ int main(int argc, char** argv)
              offsetstep,
              offsetx,
              offsety,
-             output
+             output,
+             camguardsize
             );
     
     return 0;

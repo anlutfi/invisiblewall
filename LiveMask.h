@@ -7,6 +7,9 @@
 #include <opencv2/videoio.hpp>
 #include <opencv2/opencv.hpp>
 
+#define CAMGUARD_STEP 10
+//#define CAMGUARD_SIZE 40
+
 
 using namespace cv;
 
@@ -26,7 +29,8 @@ int liveMask(cv::VideoCapture interaction,
              int offsetstep,
              int maskoffsetx,
              int maskoffsety,
-             cv::VideoWriter* video
+             cv::VideoWriter* video,
+             cv::Size camguardsize
             );
 
 
