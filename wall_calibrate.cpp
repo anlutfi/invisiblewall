@@ -19,49 +19,7 @@ void flipvert(cv::Mat img)
 {
     cv::flip(img, img, 1);
 }
-/*
-void testProcess(char* idx1, char* idx2, char* w, char* h, char* offsetstepnm, char* outputnm)
-{
-    VideoCapture interaction;
-    VideoCapture fill;
-    
-    int i1, i2;
-    sscanf(idx1, "%d", &i1);
-    sscanf(idx2, "%d", &i2);
-    
-    assignCameras(&interaction, &fill, i1, i2);
-    
-    VideoWriter* output = NULL;
-        
-    if(outputnm != NULL)
-    {
-        double w = interaction.get(CV_CAP_PROP_FRAME_WIDTH); //get the width of frames of the video
-        double h = interaction.get(CV_CAP_PROP_FRAME_HEIGHT); //get the height of frames of the video
-        
-        Size frameSize(static_cast<int>(w), static_cast<int>(h));
-        
-        output = new VideoWriter (outputnm, CV_FOURCC('H','2','6','4'), 20, frameSize, true);
-        
-        if ( !output->isOpened() ) //if not initialize the VideoWriter successfully, exit the program
-        {
-            cout << "ERROR: Failed to write the video" << endl;
-            return;
-        }
-    }
-    
-    Mat ctr;
-    interaction >> ctr;
-    
-    int dwidth, dheight;
-    sscanf(w, "%d", &dwidth);
-    sscanf(h, "%d", &dheight);
-    
-    int offsetstep;
-    sscanf(offsetstepnm, "%d", &offsetstep);
-    
-    liveMask(interaction, fill, Size(dwidth, dheight), &flipvert, NULL, 100, 1, offsetstep, offsetstep, output);
-}
-//*/
+
 
 int main(int argc, char** argv)
 {

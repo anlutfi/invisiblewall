@@ -87,9 +87,9 @@ int liveMask(cv::VideoCapture interaction,
                                threshold,
                                blurkernelsize,
                                maskoffsetx,
-                               maskoffsety/*,
+                               maskoffsety,
                                camguardpos,
-                               camguardsize*/
+                               camguardsize
                               );
         
         //display frame
@@ -176,22 +176,31 @@ int liveMask(cv::VideoCapture interaction,
                 
             case 'w':
                 camguardpos.y = max(camguardpos.y - CAMGUARD_STEP, 0);
+                std::cout << "CamGuard: X = " << camguardpos.x
+                          << "  Y = " << camguardpos.y << "\n";
                 break;
                 
             case 's':
                 camguardpos.y = min(camguardpos.y + CAMGUARD_STEP,
                                     resolution.height - 1
                                    );
+                std::cout << "CamGuard: X = " << camguardpos.x
+                          << "  Y = " << camguardpos.y << "\n";
                 break;
                 
             case 'a':
                 camguardpos.x = max(camguardpos.x - CAMGUARD_STEP, 0);
+                std::cout << "CamGuard: X = " << camguardpos.x
+                          << "  Y = " << camguardpos.y << "\n";
                 break;
                 
             case 'd':
                 camguardpos.x = min(camguardpos.x + CAMGUARD_STEP,
                                     resolution.width - 1
                                    );
+                std::cout << "CamGuard: X = " << camguardpos.x
+                          << "  Y = " << camguardpos.y << "\n";
+                break;
             //*/    
         }
         
