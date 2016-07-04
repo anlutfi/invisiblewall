@@ -8,6 +8,8 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 #include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #include "LiveMask.h"
 #include "Calibration.h"
@@ -23,34 +25,43 @@ void flipvert(cv::Mat img)
 
 int main(int argc, char** argv)
 {
-    int cam1, cam2;
-    sscanf(argv[1], "%d", &cam1);
-    sscanf(argv[2], "%d", &cam2);
-    
-    int dwidth, dheight;
-    sscanf(argv[3], "%d", &dwidth);
-    sscanf(argv[4], "%d", &dheight);
-    
+    int cam1 = 0;
+    int cam2 = 1;
+    int dwidth = 1024;
+    int dheight = 768;
     Size desiredres(dwidth, dheight);
     
-    int offsetstep;
-    sscanf(argv[5], "%d", &offsetstep);
-    
-    int sz;
-    sscanf(argv[6], "%d", &sz);
+    int offsetstep = 5;
+    int sz = 100;
     Size camguardsize(sz, sz);
     
-    unsigned char threshold;
-    sscanf(argv[7], "%u", &threshold);
-    cout << "\n\n\nTHRESHOLD = " << (int)threshold << "\n\n\n";
+    unsigned char threshold = 49;
+    int blurkernelsize = 3;
+    int offsetx = 50;
+    int offsety = 80;
     
-    int blurkernelsize;
-    sscanf(argv[8], "%d", &blurkernelsize);
-    
-    int offsetx, offsety;
-    sscanf(argv[9],  "%d", &offsetx);
-    sscanf(argv[10], "%d", &offsety);
-    
+    FILE* ini = fopen("parede.ini", "r");
+    if(ini != NULL)
+    {
+        char line[50];
+        
+        int len = 0;
+        fgets(line, sizeof(line), ini);
+        fclose(ini);
+        
+        sscanf(line, "%d %d %d %d %d %d %u %d %d %d",
+               &cam1,
+               &cam2,
+               &dwidth,
+               &dheight,
+               &offsetstep,
+               &sz,
+               &threshold,
+               &blurkernelsize,
+               &offsetx,
+               &offsety
+              );
+    }
     
     VideoCapture interaction;
     VideoCapture fill;
@@ -108,6 +119,28 @@ int main(int argc, char** argv)
          << blurkernelsize << " "
          << offsetx << " "
          << offsety << "\n"; 
+         
+    ini = fopen("parede.ini", "w");
+    if(ini == NULL)
+    {
+        cout << "PArameter file missing or corrupted. Expected parede.ini\n";
+        return 1;
+    }
+    
+    fprintf(ini, "%d %d %d %d %d %d %u %d %d %d\n",
+            cam1,
+            cam2,
+            dwidth,
+            dheight,
+            offsetstep,
+            sz,
+            threshold,
+            blurkernelsize,
+            offsetx,
+            offsety
+           );
+    
+    fclose(ini);
     
     return 0;
 }

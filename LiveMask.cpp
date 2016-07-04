@@ -48,10 +48,17 @@ int liveMask(cv::VideoCapture interaction,
     
     //make a black control image with the correct type and resolution
     //Mat control = Mat::zeros( resolution.height, resolution.width, fillframe.type() );
+    /*
     Mat control = Mat::zeros(interaction.get(CAP_PROP_FRAME_HEIGHT),
                              interaction.get(CAP_PROP_FRAME_WIDTH),
                              fillframe.type()
                             );
+    /*/
+    Mat control;
+    interaction >> control;
+    if(reorientInteraction != NULL)
+            reorientInteraction(control);
+    //*/
     
     //open an output window and set it to full-screen
     cv::namedWindow("Video", CV_WINDOW_NORMAL);
@@ -126,16 +133,8 @@ int liveMask(cv::VideoCapture interaction,
                 std::cout << "Threshold = " << (int)(*threshold) << "\n";
                 break;
             
-            //increase kernel size for median blur
-            case 'p':
-                *blurkernelsize = min(*blurkernelsize + BL_KERNEL_STEP, BL_KERNEL_MAX);
-                std::cout << "Kernel size = " << *blurkernelsize << "\n";
-                break;
-            
-            //decerase kernel size
-            case 'o':
-                *blurkernelsize = max(*blurkernelsize - BL_KERNEL_STEP, BL_KERNEL_MIN);
-                std::cout << "Kernel size = " << *blurkernelsize << "\n";
+            case 'b':
+                *blurkernelsize = *blurkernelsize == 1 ? 3 : 1;
                 break;
             
             //generate a new control image(recalibration)
@@ -174,6 +173,7 @@ int liveMask(cv::VideoCapture interaction,
                 std::cout << "Y offset = " << *maskoffsety << "\n";
                 break;
                 
+            /*
             case 'w':
                 camguardpos.y = max(camguardpos.y - CAMGUARD_STEP, 0);
                 std::cout << "CamGuard: X = " << camguardpos.x
