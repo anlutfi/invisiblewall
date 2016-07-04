@@ -54,6 +54,9 @@ void assignCameras(VideoCapture* interaction, VideoCapture* fill, int i1, int i2
     }
     destroyWindow("Camera Assignment");
     destroyAllWindows();
+    
+    interaction->set(CV_CAP_PROP_GAIN, 0.5);
+    
     waitKey(1);
 }
 

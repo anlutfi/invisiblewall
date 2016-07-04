@@ -5,11 +5,11 @@ int liveMask(cv::VideoCapture interaction,
              cv::Size desiredres,
              void (*reorientInteraction)(cv::Mat),
              void (*reorientFill)(cv::Mat),
-             unsigned char threshold,
-             int blurkernelsize,
+             unsigned char* threshold,
+             int* blurkernelsize,
              int offsetstep,
-             int maskoffsetx,
-             int maskoffsety,
+             int* maskoffsetx,
+             int* maskoffsety,
              cv::VideoWriter* video,
              cv::Size camguardsize
             )
@@ -84,12 +84,12 @@ int liveMask(cv::VideoCapture interaction,
         Mat output = makeFrame(control,
                                interactionframe,
                                fillframe,
-                               threshold,
-                               blurkernelsize,
-                               maskoffsetx,
-                               maskoffsety,
+                               *threshold,
+                               *blurkernelsize,
+                               *maskoffsetx,
+                               *maskoffsety/*,
                                camguardpos,
-                               camguardsize
+                               camguardsize*/
                               );
         
         //display frame
@@ -104,38 +104,38 @@ int liveMask(cv::VideoCapture interaction,
         {
             //increase threshold for a pixel to be included in the mask
             case '=':
-                threshold = min(threshold + THRESHOLD_STEP, THRESHOLD_MAX);
-                std::cout << "Threshold = " << (int)threshold << "\n";
+                *threshold = min(*threshold + THRESHOLD_STEP, THRESHOLD_MAX);
+                std::cout << "Threshold = " << (int)(*threshold) << "\n";
                 break;
             
             //decrease threshold
             case '-':
-                threshold = max(threshold - THRESHOLD_STEP, THRESHOLD_MIN);
-                std::cout << "Threshold = " << (int)threshold << "\n";
+                *threshold = max(*threshold - THRESHOLD_STEP, THRESHOLD_MIN);
+                std::cout << "Threshold = " << (int)(*threshold) << "\n";
                 break;
             
             //increase the threshold ten times the usual step
             case ']':
-                threshold = min(threshold + 10 * THRESHOLD_STEP, THRESHOLD_MAX);
-                std::cout << "Threshold = " << (int)threshold << "\n";
+                *threshold = min(*threshold + 10 * THRESHOLD_STEP, THRESHOLD_MAX);
+                std::cout << "Threshold = " << (int)(*threshold) << "\n";
                 break;
             
             //decrease the threshold ten times the usual step
             case '[':
-                threshold = max(threshold - 10 * THRESHOLD_STEP, THRESHOLD_MIN);
-                std::cout << "Threshold = " << (int)threshold << "\n";
+                *threshold = max(*threshold - 10 * THRESHOLD_STEP, THRESHOLD_MIN);
+                std::cout << "Threshold = " << (int)(*threshold) << "\n";
                 break;
             
             //increase kernel size for median blur
             case 'p':
-                blurkernelsize = min(blurkernelsize + BL_KERNEL_STEP, BL_KERNEL_MAX);
-                std::cout << "Kernel size = " << blurkernelsize << "\n";
+                *blurkernelsize = min(*blurkernelsize + BL_KERNEL_STEP, BL_KERNEL_MAX);
+                std::cout << "Kernel size = " << *blurkernelsize << "\n";
                 break;
             
             //decerase kernel size
             case 'o':
-                blurkernelsize = max(blurkernelsize - BL_KERNEL_STEP, BL_KERNEL_MIN);
-                std::cout << "Kernel size = " << blurkernelsize << "\n";
+                *blurkernelsize = max(*blurkernelsize - BL_KERNEL_STEP, BL_KERNEL_MIN);
+                std::cout << "Kernel size = " << *blurkernelsize << "\n";
                 break;
             
             //generate a new control image(recalibration)
@@ -145,33 +145,33 @@ int liveMask(cv::VideoCapture interaction,
                 
             //*
             case UP_KEY:
-                maskoffsety = abs(maskoffsety - offsetstep) <= resolution.height ?
-                              maskoffsety - offsetstep : -resolution.height + 1;
-                std::cout << "Y offset = " << maskoffsety << "\n";
+                *maskoffsety = abs(*maskoffsety - offsetstep) <= resolution.height ?
+                              *maskoffsety - offsetstep : -resolution.height + 1;
+                std::cout << "Y offset = " << *maskoffsety << "\n";
                 break;
             
             case DOWN_KEY:
-                maskoffsety = abs(maskoffsety + offsetstep) <= resolution.height ?
-                              maskoffsety + offsetstep : resolution.height - 1;
-                std::cout << "Y offset = " << maskoffsety << "\n";
+                *maskoffsety = abs(*maskoffsety + offsetstep) <= resolution.height ?
+                              *maskoffsety + offsetstep : resolution.height - 1;
+                std::cout << "Y offset = " << *maskoffsety << "\n";
                 break;
                 
             case LEFT_KEY:
-                maskoffsetx = abs(maskoffsetx - offsetstep) <= resolution.width ?
-                              maskoffsetx - offsetstep : -resolution.width + 1;
-                std::cout << "X offset = " << maskoffsetx << "\n";
+                *maskoffsetx = abs(*maskoffsetx - offsetstep) <= resolution.width ?
+                              *maskoffsetx - offsetstep : -resolution.width + 1;
+                std::cout << "X offset = " << *maskoffsetx << "\n";
                 break;
             
             case RIGHT_KEY:
-                maskoffsetx = abs(maskoffsetx + offsetstep) <= resolution.width ?
-                              maskoffsetx + offsetstep : resolution.width - 1;
-                std::cout << "X offset = " << maskoffsetx << "\n";
+                *maskoffsetx = abs(*maskoffsetx + offsetstep) <= resolution.width ?
+                              *maskoffsetx + offsetstep : resolution.width - 1;
+                std::cout << "X offset = " << *maskoffsetx << "\n";
                 break;
             
             case '0':
-                maskoffsetx = maskoffsety = 0;
-                std::cout << "X offset = " << maskoffsetx << "\n";
-                std::cout << "Y offset = " << maskoffsety << "\n";
+                *maskoffsetx = *maskoffsety = 0;
+                std::cout << "X offset = " << *maskoffsetx << "\n";
+                std::cout << "Y offset = " << *maskoffsety << "\n";
                 break;
                 
             case 'w':
