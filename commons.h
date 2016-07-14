@@ -1,3 +1,7 @@
+/**
+Constants used in more than one place
+*/
+
 #ifndef __COMMONS_H__
 #define __COMMONS_H__
 

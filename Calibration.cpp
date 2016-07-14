@@ -24,6 +24,10 @@ void assignCameras(VideoCapture* interaction, VideoCapture* fill, int i1, int i2
     
     namedWindow("Camera Assignment", CV_WINDOW_AUTOSIZE);
     
+    /**
+    Display the stream from each camera and wait user input to assign them
+    to interaction and fill
+    */
     for(unsigned char i = 0; i < MAX_CAM; i++)
     {
         VideoCapture* cap = caps[i];

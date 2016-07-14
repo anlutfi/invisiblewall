@@ -37,6 +37,11 @@ cv::Mat makeFrame(cv::Mat control,
                   cv::Point camguardpos,
                   cv::Size camguardsize
                  );
+                 /**
+                 Cam guard is a black rectangle to be placed on top of the interaction camera,
+                 to avoid light from the projector to hit this camera directly.
+                 Should be used only if it impossible to disable auto gain and auto white balance
+                 */
                  
 cv::Mat makeFrame(cv::Mat control,
                   cv::Mat interaction,

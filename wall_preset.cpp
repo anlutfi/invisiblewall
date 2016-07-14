@@ -1,7 +1,5 @@
 //g++ -g -I/usr/local/include/opencv -I/usr/local/include/opencv2 -L/usr/local/lib/ -o tst MakeFrame.h MakeFrame.cpp VideoFeed.h VideoFeed.cpp LiveMask.h LiveMask.cpp Calibration.h Calibration.cpp test.cpp -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_imgcodecs -lopencv_videoio -std=c++11
 
-//TODO make cam index a parameter
-
 #include <opencv/cv.h>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/videoio.hpp>

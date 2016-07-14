@@ -47,31 +47,15 @@ int liveMask(cv::VideoCapture interaction,
                    );
     
     //make a black control image with the correct type and resolution
-    //Mat control = Mat::zeros( resolution.height, resolution.width, fillframe.type() );
-    /*
-    Mat control = Mat::zeros(interaction.get(CAP_PROP_FRAME_HEIGHT),
-                             interaction.get(CAP_PROP_FRAME_WIDTH),
-                             fillframe.type()
-                            );
-    /*/
     Mat control;
     interaction >> control;
     if(reorientInteraction != NULL)
             reorientInteraction(control);
-    //*/
     
     //open an output window and set it to full-screen
     cv::namedWindow("Video", CV_WINDOW_NORMAL);
     cvSetWindowProperty("Video", CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);    
     
-    //the threshold to be used for pixel election on the mask making process
-    //unsigned char threshold = DEFAULT_THRESHOLD;    
-    
-    //the size of the kernel to be used on the mask's median blur
-    //int blurkernelsize = BL_KERNEL_MIN;
-    
-    Point camguardpos(fillframe.cols / 2, fillframe.rows / 2);
-    //Size camguardsize(CAMGUARD_SIZE, CAMGUARD_SIZE);
     
     //keep streaming until user presses esc(27)
     for(unsigned char key = -1; key != 27; key = waitKey(10) % 256)
@@ -142,7 +126,7 @@ int liveMask(cv::VideoCapture interaction,
                 control = interactionframe.clone();
                 break;
                 
-            //*
+            //move the mask around, so the silhouette's are exactly in front of the subjects
             case UP_KEY:
                 *maskoffsety = abs(*maskoffsety - offsetstep) <= resolution.height ?
                               *maskoffsety - offsetstep : -resolution.height + 1;
@@ -167,41 +151,12 @@ int liveMask(cv::VideoCapture interaction,
                 std::cout << "X offset = " << *maskoffsetx << "\n";
                 break;
             
+            //reset offset
             case '0':
                 *maskoffsetx = *maskoffsety = 0;
                 std::cout << "X offset = " << *maskoffsetx << "\n";
                 std::cout << "Y offset = " << *maskoffsety << "\n";
                 break;
-                
-            /*
-            case 'w':
-                camguardpos.y = max(camguardpos.y - CAMGUARD_STEP, 0);
-                std::cout << "CamGuard: X = " << camguardpos.x
-                          << "  Y = " << camguardpos.y << "\n";
-                break;
-                
-            case 's':
-                camguardpos.y = min(camguardpos.y + CAMGUARD_STEP,
-                                    resolution.height - 1
-                                   );
-                std::cout << "CamGuard: X = " << camguardpos.x
-                          << "  Y = " << camguardpos.y << "\n";
-                break;
-                
-            case 'a':
-                camguardpos.x = max(camguardpos.x - CAMGUARD_STEP, 0);
-                std::cout << "CamGuard: X = " << camguardpos.x
-                          << "  Y = " << camguardpos.y << "\n";
-                break;
-                
-            case 'd':
-                camguardpos.x = min(camguardpos.x + CAMGUARD_STEP,
-                                    resolution.width - 1
-                                   );
-                std::cout << "CamGuard: X = " << camguardpos.x
-                          << "  Y = " << camguardpos.y << "\n";
-                break;
-            //*/    
         }
         
     }
